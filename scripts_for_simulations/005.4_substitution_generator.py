@@ -14,8 +14,8 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-thorvaldsen_matrix_file = '/home/afcis2/FoldX_simulations/Subst_matrices/Thorvaldsen_genetic_code.txt'
-zhu_matrix_file = '/home/afcis2/FoldX_simulations/Subst_matrices/clean_zhu_codon_aa.txt'
+thorvaldsen_matrix_file = 'Data/Thorvaldsen_genetic_code.txt'
+zhu_matrix_file = 'Data/clean_zhu_codon_aa.txt'
 
 # thorvaldsen_matrix_file = '/Users/angelcisneros/Documents/Automne2017/Scripts/Python/Subst_matrices/Thorvaldsen_genetic_code.txt'
 # zhu_matrix_file = '/Users/angelcisneros/Documents/Automne2018/Paralog_interference/Subs_matrices/clean_zhu_codon_aa.txt'

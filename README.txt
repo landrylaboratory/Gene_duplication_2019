@@ -86,17 +86,25 @@ Script to generate supplementary figures from 6.HM_compiled_data.R and 8.HM_HET_
 #	Scripts_for_interface_conservation folder			#
 #########################################################################
 
-001_gather_PDB_info.ipynb: Given an alignment of protein sequences to PDB chains, pairs of paralogs, and downloaded files with the asymmetrical unit, this script extracts information on which chains from which complexes from the PDB map to the given sequences. It returns a table that matches proteins to PDB structures and their paralogs. This is a Jupyter notebook. 001_gather_PDB_info.py is a Python-formatted version of the same code.
+001_extract_sequences.py: This script extracts a series of sequences from a file. In this case, it was used to extract the sequences of duplicated genes from the file with the reference proteome.
 
-002_format_structural_data.R: This script does some additional formatting of the tables obtained from the previous step. The tables from this script are designed to be integrated into table S1. The table with the best structures selects the best crystal structures available for each of the identified complexes to use them in the interface conservation analysis.
+002_alignments.sh: This is the script that performs the alignments to the whole set of sequences from the PDB downloaded on September 21st, 2017. The sequences from the whole PDB (pdb_seqres.txt) can be downloaded from https://www.rcsb.org/pdb/download/download.do.
 
-003_interface_conservation_analysis.ipynb: This is the main script that looks for sequence conservation in interfaces. It uses the 001_generate_bio_assembly.py script from the scripts_for_simulations folder and code from the 004.1_call_interfaces.py script. It performs all the alignments and matches proteins to their corresponding PhylomeDB phylogenies. This is a Jupyter notebook. 003_interface_conservation_analysis.py is a Python-formatted version of the same code.
+003_filter_alignments.R: This script looks at the results of aligning the duplicated sequences to the PDB and formats them as a table.
 
-004_pdb2fasta_interfaces.sh: This is a modified version of Pierre Poulain's pdb2fasta.sh script available at https://bitbucket.org/pierrepo/pdb2fasta/. It saved PDB files as FASTA formatted files with interface residues in lowercase and the rest of the sequence in uppercase.
+004_download_PDB.sh: This script receives the ID of a PDB structure and downloads it. It was used to download the PDB structures that were matched to duplicate proteins in our data set.
 
-005_interface_counter.ipynb: This is a Jupyter notebook that takes the FASTA formatted interface files and outputs per chain counts of total residues and interface residues. This output was later integrated to table S11. 005_interface_counter.py is a Python-formatted version of the same code.
+005_gather_PDB_info.ipynb: Given an alignment of protein sequences to PDB chains, pairs of paralogs, and downloaded files with the asymmetrical unit, this script extracts information on which chains from which complexes from the PDB map to the given sequences. It returns a table that matches proteins to PDB structures and their paralogs, as well as a table with the best structures that represent each of the observed complexes. This is a Jupyter notebook. 005_gather_PDB_info.py is a Python-formatted version of the same code.
 
-006_figure_S6.R: This script produces figure S6 from the processed files in the Data folder.
+006_format_structural_data.R: This script does some additional formatting of the tables obtained from the previous step. The tables from this script are designed to be integrated into table S1. The table with the best structures selects the best crystal structures available for each of the identified complexes to use them in the interface conservation analysis.
+
+007_interface_conservation_analysis.ipynb: This is the main script that looks for sequence conservation in interfaces. It uses the 001_generate_bio_assembly.py script and code from the 004.1_call_interfaces.py script from the scripts_for_simulations folder. It performs all the alignments and matches proteins to their corresponding PhylomeDB phylogenies (phylome_0007 was used for this analysis). This is a Jupyter notebook. 007_interface_conservation_analysis.py is a Python-formatted version of the same code.
+
+008_pdb2fasta_interfaces.sh: This is a modified version of Pierre Poulain's pdb2fasta.sh script available at https://bitbucket.org/pierrepo/pdb2fasta/. It saved PDB files as FASTA formatted files with interface residues in lowercase and the rest of the sequence in uppercase.
+
+009_interface_counter.ipynb: This is a Jupyter notebook that takes the FASTA formatted interface files and outputs per chain counts of total residues and interface residues. This output was later integrated to table S11. 009_interface_counter.py is a Python-formatted version of the same code.
+
+010_figure_S6.R: This script produces figure S6 from the processed files in the Data folder.
 
 #########################################################################
 #	Scripts_for_simulations folder					#

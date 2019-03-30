@@ -1,33 +1,37 @@
 #!/bin/bash
 
 # This code receives the name of a file that should be looked inside the 002_ins_res_alt_crd folder and passes it on to the FoldX RepairPDB function.
-# $1 = input PDB without the 'pdb' extension
+# $1 = path to the input PDB without the 'pdb' extension
+# $2 = path to the output directory
 
-cat > $1_repair.sbatch << EOF
+prot=$(basename $1)
+
+cat > ${prot}_repair.sbatch << EOF
 #!/bin/bash
 
-#SBATCH -D /home/afcis2/FoldX_simulations
-#SBATCH -J $1_repair
-#SBATCH -o $1_repair.out
+#SBATCH -D $PWD
+#SBATCH -J ${prot}_repair
+#SBATCH -o ${prot}_repair.out
 #SBATCH -c 1
 #SBATCH -p ibismini
 #SBATCH --time=1-00:00
 #SBATCH --mem=51200
 
-cp 002_ins_res_alt_crd/$1.pdb 003_repair
+cp 002_ins_res_alt_crd/${prot}.pdb $2
 
-cd 003_repair
+cd $2
 
+# Make sure that the rotabase.txt file needed by FoldX can be linked to this folder
 ln -s `which rotabase.txt` rotabase.txt
 
-FoldX --command=RepairPDB --pdb=$1.pdb --ionStrength=0.05 --pH=7 --water=CRYSTAL --vdwDesign=2 --out-pdb=true --pdbHydrogens=false > $1_Repair.log
+FoldX --command=RepairPDB --pdb=${prot}.pdb --ionStrength=0.05 --pH=7 --water=CRYSTAL --vdwDesign=2 --out-pdb=true --pdbHydrogens=false > ${prot}_Repair.log
 
-mkdir $1_Repair
+mkdir ${prot}_Repair
 
-mv $1_Repair?* $1_Repair
+mv ${prot}_Repair?* ${prot}_Repair
 
-rm $1.pdb
+rm ${prot}.pdb
 EOF
 
-sbatch $1_repair.sbatch
+sbatch ${prot}_repair.sbatch
 

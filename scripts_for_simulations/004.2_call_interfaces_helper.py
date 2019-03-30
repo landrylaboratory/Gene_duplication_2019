@@ -212,10 +212,6 @@ def parse_coordinates(infile, alpha_only):
 
 def get_vdw_dict(infile):
     '''This function parses the FreeSasa file I will use as a reference for the van der Waals radii.
-    At the moment, it is located at:
-
-    /Users/angelcisneros/Documents/Automne2017/Data/PDBePISA/Homodimers_sept_13_2017/filtered_homodimers/Reference_vdw/1aof_sasa.pdb
-
     '''
     handle = open(infile, 'r')
 

@@ -19,7 +19,7 @@ if not os.path.exists(out_folder):
 	os.makedirs(out_folder)
 
 # This dictionary is based on the output of FreeSASA for PDB entry 1aof. 
-ref_vdw_dict = '/home/afcis2/FoldX_simulations/Reference_vdw/1aof_sasa.pdb'
+ref_vdw_dict = 'Data/1aof_sasa.pdb'
 
 # Create the reference dictionary for van der Waals radii
 vdw_dict = get_vdw_dict(ref_vdw_dict)
