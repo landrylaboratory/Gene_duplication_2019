@@ -1,9 +1,14 @@
 #######################################################################################
 #                            Script to analyse our PCA                                #
 #######################################################################################
-rm(list=ls())
 
-setwd("/Users/axellemarchant/Documents/postdoc_Landry/AMarchant_2016-2019/papier_AMarchant_2019")
+#Colonies flagged as irregular by gitter (as S or S, C flags) or that did not grow on the
+#last diploid selection step or on DMSO medium were considered as missing data. 
+#We considered only bait-prey pairs with at least four replicates and used the median of 
+#colony sizes as PCA signal. The data was finally filtered based on the completeness of 
+#paralogous pairs so we could test HMs and HETs systematically. 
+
+rm(list=ls())
 
 library(dplyr)
 library(ggplot2)
@@ -17,8 +22,27 @@ library(VennDiagram)
 library(mixtools)
 library(magrittr)
 
-df.med=read.table("output/PCA_med_data_2019_02.tab", sep="\t", header=T)
+#to set the working directory
+setwd("dir")
 
+df.med=read.table("output/PCA_med_data_2019_02.tab", sep="\t", header=T) #1328
+
+#Filter SSD with MSA sequence similarity:
+#If sequence similarity < 20 %, paralogs need to be in the same phylome (from phylomDB)
+#to be selected
+
+MSA_seq_ident_under_20 <- read.table("data/MSA_seq_ident_under_20.txt", sep="\t", header=T)
+MSA_seq_ident_under_20 <- filter(MSA_seq_ident_under_20, Duplication=="SSD")
+MSA_seq_ident_under_20$pair<- apply(cbind(as.character(MSA_seq_ident_under_20$P1), 
+                             as.character(MSA_seq_ident_under_20$P2)), 
+                       1, function(x) paste(sort(x), collapse="."))
+
+MSA_seq_ident_under_20 <- select(MSA_seq_ident_under_20, pair, Same_phylome)
+df.med <- left_join(df.med, MSA_seq_ident_under_20, by='pair')
+df.med <- filter(df.med, is.na(Same_phylome) | Same_phylome==1)
+
+
+#To check zize distribution
 colplot=c("#00A44A", "#28F040", "#0083B3", "#00F5FF", "#003B63",
           "#7D0A90", "#CB10EA",  "#C98EF6", 
           "#8C0011", "#FF011B", "#FF7605", "#FDEF33")
@@ -35,9 +59,10 @@ legend("topright", c("HM_SSD", "HET_SSD", "HM_WGD", "HET_WGD"),
 
 
 
-#####################################################################################################
-#                               Determine a threshold of interaction                                #
-#####################################################################################################
+##############################################################################################################
+# Determination of a threshold of size colony which represents the presence of protein - protein interaction #                         #
+##############################################################################################################
+
 prob.type=c()
 
 plot_normalmixEM <- function(data)
@@ -46,7 +71,7 @@ plot_normalmixEM <- function(data)
   abline(v=16, col="gray")
 }
 
-pdf("output/normalmixEM_for_threshold_2019_02.pdf")
+pdf("without_low_qual/normalmixEM_for_threshold_2019_02.pdf")
 for (dupli in unique(df.med$Duplication)) 
 {
   dupli.subset=filter(df.med, Duplication==dupli)
@@ -99,34 +124,38 @@ df.med.seuil <- left_join(df.med, prob.type, by=c("Duplication", "type"))
 #z-score
 df.med.seuil %<>% mutate (Zscore = (med_MTX - mean.type) / sd.type)
 
-#determine if there are interaction or not
+#to determine if there are interaction or not
 df.med.seuil %<>% mutate (interaction = ifelse(Zscore>2.5, 1, 0))
-(nrow(filter(df.med.seuil,interaction==1))/nrow(df.med.seuil))*100 #34.48% of ppi tested are positive
-write.table(df.med.seuil, file="output/PCA_med_seuil_data_2019_02.tab", sep="\t",  quote=F, row.names=F)
+(nrow(filter(df.med.seuil,interaction==1))/nrow(df.med.seuil))*100 #37.59% of ppi tested are positive
+write.table(df.med.seuil, file="without_low_qual/PCA_med_seuil_data_2019_06.tab", sep="\t",  quote=F, row.names=F)
 
-#selection of pairs with both HM tested and at least 1 HET
-df.med.paralogs <- df.med.seuil %>% filter(Duplication=="SSD" | Duplication=="WGD")
+#selection of complete pairs: with both HM tested and at least 1 HET
+df.med.paralogs <- df.med.seuil
 
 df.nbHET.tot = df.med.paralogs %>% group_by(pair) %>% filter(type=="HET") %>% 
   summarise(nbHET.tot = n()) %>% as.data.frame()
 
 df.nbHM.tot = df.med.paralogs  %>% group_by(pair) %>% filter(type=="HM") %>% 
   summarise(nbHM.tot = n()) %>% as.data.frame()
-df.ntype = full_join(df.nbHM.tot, df.nbHET.tot, by="pair") #341 pairs
+df.ntype = full_join(df.nbHM.tot, df.nbHET.tot, by="pair")
+nrow(df.ntype) #294 pairs
 
 df.med.paralogs  = left_join(df.med.paralogs , df.ntype, by="pair")
-df.compl.pairs = filter(df.med.paralogs, nbHM.tot==2 & !is.na(nbHET.tot)) #1252 --> 1252/4 = 313 pairs fully tested
+df.compl.pairs = filter(df.med.paralogs, nbHM.tot==2 & !is.na(nbHET.tot))
+nrow(df.compl.pairs) #1072
+nrow(df.compl.pairs) / 4 #268 pairs fully tested
 nrow(filter(df.compl.pairs, nbHET.tot==1)) #0
 
 
 #####################################################################################################
-#              Check for heterodimers found in a direction and not in the other                     #
+#              Looking for heterodimers found in a direction and not in the other                   #  
+#               (P1.DHFR[1-2] - P2.DHFR[3] but not P1.DHFR[3] - P2.DHFR[1-2] or the contrary)       #
 #####################################################################################################
 #If we observe HET in a direction and not in an other (ex: P1.prey-P2.bait shows PPI but not P2.prey-P1.bait),
 #it could potentially significate that one DHFR insertion was faild (here P2.prey or P1.bait)
 #in this case, we can't observe HM of the bad strain
 
-#Here, I check if the case with only one direction showing HET ppi are significatively more associated
+#Here, we check if the case with only one direction showing HET ppi are significatively more associated
 #with only one homodimer observation
 
 #check in pairs showing interactions
@@ -136,17 +165,17 @@ df.nbHET.inter = df.med.paralogs %>% group_by(pair) %>% filter(interaction==1) %
 only1HET <- filter(df.nbHET.inter, nbHET.inter==1)
 
 (nrow(only1HET)/nrow(df.nbHET.inter))*100 
-#18.18% with only one of 2 directions showing ppi detection
+#16.98% with only one of 2 directions showing ppi detection
 
 #####################################################################################################
 #                     Determine motif interaction pattern for each pairs                           #
 #####################################################################################################
-#motif 1 : no interaction
-#motif 2 : one of the 2 paralogs forms HM / no HET
-#motif 3 : both paralogs form HM / no HET
-#motif 4 : HET / no HM
-#motif 5 : one of the 2 paralogs forms HM / HET
-#motif 6 : both paralogs form HM / HET
+#motif NI : no interaction
+#motif 1HM : one of the 2 paralogs forms HM / no HET
+#motif 2HM : both paralogs form HM / no HET
+#motif HET : HET / no HM
+#motif 1HM.HET : one of the 2 paralogs forms HM / HET
+#motif 2HM.HET : both paralogs form HM / HET
 
 P <- colsplit(df.compl.pairs$pair, "[.]", names=c("P1", "P2"))
 df.compl.pairs <- cbind(df.compl.pairs, P)
@@ -189,11 +218,11 @@ df.motif <- df.med.nbrI %>% group_by(Duplication, pair) %>%
             else if (nbHM.inter==0 & (nbHET.inter==2 | nbHET.inter==1)) "HET"
             else if ((nbHM.inter==1 & (nbHET.inter==2 | nbHET.inter==1)) | (nbHM.inter==2 & (nbHET.inter==2 | nbHET.inter==1))) "HM&HET"
             else "pb") %>% 
-  mutate(motif.number.PCA = if (nbHM.inter==0 & nbHET.inter==0) 1
-         else if (nbHM.inter==1 & nbHET.inter==0) 2
-           else if (nbHM.inter==2 & nbHET.inter==0) 3
-             else if (nbHM.inter==0 & nbHET.inter>0) 4
-               else if (nbHM.inter==1 & nbHET.inter>0) 5
-                 else if (nbHM.inter==2 & nbHET.inter>0) 6) %>% as.data.frame()
+  mutate(motif.number.PCA = if (nbHM.inter==0 & nbHET.inter==0) 'NI'
+         else if (nbHM.inter==1 & nbHET.inter==0) '1HM'
+           else if (nbHM.inter==2 & nbHET.inter==0) '2HM'
+             else if (nbHM.inter==0 & nbHET.inter>0) 'HET'
+               else if (nbHM.inter==1 & nbHET.inter>0) '1HM.HET'
+                 else if (nbHM.inter==2 & nbHET.inter>0) '2HM.HET') %>% as.data.frame()
 
-write.table(df.motif, file="output/PCA_motif_interaction_2019_03.tab", sep="\t",  quote=F, row.names=F)
+write.table(df.motif, file="without_low_qual/PCA_motif_interaction_2019_06_phylom.tab", sep="\t",  quote=F, row.names=F)

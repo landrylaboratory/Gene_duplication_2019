@@ -1,6 +1,9 @@
 #!/bin/bash
 
 #### This is the main script for the simulations with paralog coevolution ####
+# It applies mutations and obtains their energetic parameters, calls the script
+# for selection, and manages the output files.
+
 
 ###############################
 # Arguments:
@@ -18,16 +21,14 @@ config_file=`echo $4 | rev | cut -f 1 -d '/' | rev`
 # Load the variables
 source ./${config_file}
 
-# Make sure I am back in the main directory before creating a folder for each replicate
-# cd $MAINDIR
 mkdir $rep
 cd $rep
 ln -s $rotabase rotabase.txt
 
-# Add symlink to the repaired protein so that every replicate can work with it
+# Add symlink to the starting file
 ln -s ./../${prot}.pdb ${prot}.pdb
 
-# Should create a folder for the three complexes
+# Get chains
 chainA=$(echo $chains | cut -c 1)
 chainB=$(echo $chains | cut -c 3)
 
@@ -40,9 +41,9 @@ do
 
 	mkdir homodimer_${chainA} homodimer_${chainB} heterodimer
 
-	# Generate the substitutions that I will be working with
-	# If it's the first substitution, I will generate them from the original structure
-	# Else, I will get the last accepted heterodimer and determine substitutions based on its sequence
+	# Generate the substitutions
+	# First substitutions are generatedfrom the original structure
+	# All the others are generated from the last accepted complex
 	if [ $mut -eq 1 ]
 	then
 		ln -s ../../${prot}.pdb
@@ -51,8 +52,7 @@ do
 	else
 		prev=$(($mut-1))
 
-		# If the previous substitution was accepted, I will take its optimized structure
-		# Else I will retrieve the last accepted one from the previous folder
+		# Take the last accepted substitution
 		if [[ $accepted ]]
 		then
 			ln -s ../${prev}/heterodimer/Optimized_${prot}_${prev}.pdb ./
@@ -84,18 +84,17 @@ do
 			# Apply the substitutions
 			FoldX --command=BuildModel --pdb=${prot}.pdb --mutant-file=individual_list.txt --ionStrength=0.05 --pH=7 --water=CRYSTAL --vdwDesign=2 --out-pdb=true --pdbHydrogens=false --numberOfRuns=1 > /dev/null
 
-            # To reduce disk usage, I will eliminate the WT files, the copy of the optimized structure from the previous replicate
-            # They are redundant with the files from the previous reploicate's folder
+            # Remove unnecessary files to reduce disk usage
             rm ${prot}.pdb WT_${prot}_1.pdb
 
 		else
 
 			prev=$(($mut-1))
 
-			# Bring the files from the previous run			
+			# Bring the files from the previous substitution			
 			if [[ $accepted ]]
 			then
-				# I have to add a link to the optimized structure after the substitutions from the previous folder
+
 				ln -s ../../${prev}/${subfolder}/Optimized_${prot}_${prev}.pdb ./
 				ln -s ${rotabase} ./
 				mkdir previous
@@ -103,8 +102,7 @@ do
 				ln ../../../${prev}/${subfolder}/Optimized_${prot}_${prev}.pdb ./previous.pdb
 				cd ..
 			else
-				# I would have to link to the last optimized structure that was accepted
-				# As I will be saving links in the "previous" folders, I can get that last structure from there
+
 				ln ../../${prev}/${subfolder}/previous/previous.pdb ./Optimized_${prot}_${prev}.pdb
 				ln -s ${rotabase} ./
 				mkdir previous
@@ -120,13 +118,8 @@ do
 			# Rename the files that BuildModel produces
 			mv Optimized_${prot}_${prev}_1.pdb ${prot}_${mut}.pdb
 
-#           mv Dif_Optimized_${prot}_${prev}.fxout Dif_${prot}_${mut}.fxout
-#           mv Average_Optimized_${prot}_${prev}.fxout Average_${prot}_${mut}.fxout
-#           mv Raw_Optimized_${prot}_${prev}.fxout Raw_${prot}_${mut}.fxout
-#           mv PdbList_Optimized_${prot}_${prev}.fxout Pdblist_${prot}_${mut}.fxout
 
-            # To reduce disk usage, I will eliminate the WT files, the copy of the optimized structure from the previous replicate
-            # They are redundant with the files from the previous reploicate's folder
+            # Remove unnecessary files to reduce disk usage
             rm Optimized_${prot}_${prev}.pdb WT_Optimized_${prot}_${prev}_1.pdb
 
 		fi
@@ -149,8 +142,7 @@ do
 		FoldX --command=Stability --pdb=Optimized_${prot}_${mut}_${chainA}.pdb > /dev/null
 		FoldX --command=Stability --pdb=Optimized_${prot}_${mut}_${chainB}.pdb > /dev/null
 
-		# To reduce disk usage, I will eliminate the files with the separate chains
-		# They can be recovered easily with a grep.
+		# Remove unnecessary files to reduce disk usage
 		rm Optimized_${prot}_${mut}_${chainA}.pdb Optimized_${prot}_${mut}_${chainB}.pdb
  
 		# Collect tbe data into a single file (separated by spaces)
@@ -168,33 +160,31 @@ do
             previous_deltaG=../../${prev}/${subfolder}/deltaGs_after_selection_${prev}.tab
         fi
 
-		# Call my Rscript to decide whether the substitution should be accepted or not
+		# Apply selection
 		if [ $fit_func -eq 0 ]
 		then
 			Rscript $apply_selection -c deltaGs.tab \
 			-p $previous_deltaG -o $outfile -m $fitness_program -r $reference_file \
-			-N $pop_size -f $fit_func -b $beta
+			-N $pop_size -f $fit_func -b $beta -s $threshold_factor
 		elif [ $fit_func -eq 1 ]
 		then
-            Rscript $apply_selection -c deltaGs.tab \
-            -p $previous_deltaG -o $outfile -m $fitness_program -r $reference_file \
-            -N $pop_size -f $fit_func -k $shape -t $scale -l $plateau_length
+		Rscript $apply_selection -c deltaGs.tab \
+                        -p $previous_deltaG -o $outfile -m $fitness_program -r $reference_file \
+                        -N $pop_size -f $fit_func -b $beta -s $threshold_factor -l $plateau_length
 		fi
 
-        # Finally, I can remove some more files I am not going to use
-        # This will save some more disk space
+        # Remove unnecessary files to reduce disk usage
         rm Summary* Average* Dif* Raw* Interface_Residues* OP*fxout PdbList* Indiv_energies*
 
-		# Now that I know the deltaGs for this complex, I should go to the parent folder and get everything for the other two complexes
 		cd ..
 	done
 
-	# Now that I have decided whether each of the complexes would be accepted by the Paccept function, I can decide whether I pass them on to the next round with my criteria
-	# scenario = 0 will be redundance (the substitutions are passed to the next round if at least one of the three complexes was accepted)
-	# scenario = 1 will be subfunctionalization (the substitutions are passed to the next round if the two homodimers are accepted)
-	# scenario = 2 will be dependence (the substitutions are passed to the next round if the heterodimer was accepted)
-        # scenario = 3 will be selection on homodimer AA (the substitutions are passed to the next round if the homodimer AA is accepted)
-        # scenario = 4 will be selection on homodimer BB (the substitutions are passed to the next round if the homodimer AA is accepted)
+	# Decide if the mutations will be accepted or not
+	
+	# scenario = 1 will be selection on both HMs (the substitutions are passed to the next round if the two homodimers are accepted)
+	# scenario = 2 will be selection on heterodimer AB (the substitutions are passed to the next round if the heterodimer was accepted)
+	# scenario = 3 will be selection on homodimer AA (the substitutions are passed to the next round if the homodimer AA is accepted)
+	# scenario = 4 will be selection on homodimer BB (the substitutions are passed to the next round if the homodimer BB is accepted)
 	if [ ${scenario} -eq 0 ]
 	then
 		accepted=$(grep 'ACCEPTED' */${outfile}_verdict.txt)
@@ -205,7 +195,7 @@ do
 
 		if [[ $check1 ]] && [[ $check2 ]]
 		then
-			# If both were accepted, I save accepted to something
+			# Both were accepted
 			accepted='ACCEPTED'
 		else
 			# Else, I save it as an empty variable
@@ -222,15 +212,15 @@ do
         accepted=$(grep 'ACCEPTED' homodimer_${chainB}/${outfile}_verdict.txt)
 	fi
 
-	# Check how to keep track of the deltaGs after selection
+	# Keep track of the deltaGs after selection
 	if [[ $accepted ]]
 	then
-		# Then I need to save deltaGs_after_selection.tab as the new values
+		# Accepted substitution
 		ln homodimer_${chainA}/deltaGs.tab homodimer_${chainA}/deltaGs_after_selection_${mut}.tab
 		ln homodimer_${chainB}/deltaGs.tab homodimer_${chainB}/deltaGs_after_selection_${mut}.tab
 		ln heterodimer/deltaGs.tab heterodimer/deltaGs_after_selection_${mut}.tab
 	else
-		# If it's the first substitution that was rejected, I will need to take the original values
+		# Rejected substitution, back to the last accepted one
 		if [ $mut -eq 1 ]
 		then
 			ln ../../original_deltaGs.tab homodimer_${chainA}/deltaGs_after_selection_${mut}.tab
@@ -244,7 +234,6 @@ do
 		fi
 	fi	
 
-	# Go up one level so that the substitutions are found in different folders.
 	cd ..
 
 done
@@ -253,10 +242,8 @@ done
 for subfolder in heterodimer homodimer_${chainA} homodimer_${chainB}
 do	
 	# Concatenate the list of deltaGs for each type of complex
-	# As this whole script is meant to be the work of a single replicate, this will be repeated for each of them
 	cat <(cat ../original_deltaGs*) <(ls */${subfolder}/deltaGs_after_selection* | sort -g | xargs -I {} sed '2q;d' {}) > all_deltaGs_results_${subfolder}.txt 
-
-	# The following lines will gather the information for the amino acid substitutions attempted on every kind of complex 
+ 
 	# Get the list of substitutions
 	ls */${subfolder}/individual_list.txt | sort -g | xargs cat | sed -E 's/;/\n/g; s/,/\t/g' > all_substitutions_${subfolder}_extracted.tab
 
@@ -267,7 +254,7 @@ do
 	<(ls */${subfolder}/*verdict.txt | sort -g | xargs -I {} tail -n 1 {}) > all_substitutions_${subfolder}_formatted.tab
 
 	# Add a header and a filler row for the starting values
-	cat <(echo "Chain_A_subs_position,Chain_A_subs_initial,Chain_A_subs_final,Chain_B_subs_position,Chain_B_subs_initial,Chain_B_subs_final,Verdict" | sed -E 's/,/\t/g') \
+	cat <(echo "Chain_A_subs_initial,Chain_A_subs_final,Chain_A_subs_position,Chain_B_subs_initial,Chain_B_subs_final,Chain_B_subs_position,Verdict" | sed -E 's/,/\t/g') \
 	<(echo "NA,NA,NA,NA,NA,NA,NA" | sed -E 's/,/\t/g') \
 	all_substitutions_${subfolder}_formatted.tab > all_substitutions_${subfolder}_header.tab
 

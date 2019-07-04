@@ -1,9 +1,12 @@
 #!/bin/bash
 
-# This code receives the name of a file that should be looked inside the 002_ins_res_alt_crd folder and passes it on to the FoldX RepairPDB function.
+# This code receives the name of a pdb file
+# and passes it on to the FoldX RepairPDB function.
+# The SLURM queue parameter should be modified as needed
 # $1 = path to the input PDB without the 'pdb' extension
 # $2 = path to the output directory
 
+full_path=$1
 prot=$(basename $1)
 
 cat > ${prot}_repair.sbatch << EOF
@@ -13,11 +16,11 @@ cat > ${prot}_repair.sbatch << EOF
 #SBATCH -J ${prot}_repair
 #SBATCH -o ${prot}_repair.out
 #SBATCH -c 1
-#SBATCH -p ibismini
+#SBATCH -p <queue>
 #SBATCH --time=1-00:00
 #SBATCH --mem=51200
 
-cp 002_ins_res_alt_crd/${prot}.pdb $2
+cp ${full_path}.pdb $2
 
 cd $2
 

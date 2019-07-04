@@ -1,9 +1,11 @@
+###########################################################
+#Script to generat a big dataframe from all output gitter #
+#data files and reported tagged proteins for each colony  #
+###########################################################
+
 #Create a dataframe of raw data
 rm(list=ls())
 
-setwd("/Users/axellemarchant/Documents/postdoc_Landry/AMarchant_2016-2019/papier_AMarchant_2019")
-
-require(gitter)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -16,6 +18,11 @@ library(VennDiagram)
 library(mixtools)
 library(reshape2)
 library(magrittr)
+
+
+#set the working directory to dir
+setwd("")
+
 
 ## Importing files that contains the plate plan 1536
 ## PCA1_pl1_A.csv : PCA1 - plate 1- DHFR[1,2]

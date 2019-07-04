@@ -1,3 +1,11 @@
+##########################################################################################################
+# Made a complete list of HM and HET interactions yet observerved among paralogous pairs in S.cerevisiae #
+##########################################################################################################
+
+#To complement our experimental data, we extracted HM and HET of paralogs published in 
+#BioGRID version BIOGRID-3.5.166 and data from literature (Stynen et al., 2018; Kim et al., 2019). 
+#Output are organized by pair.
+
 rm(list=ls())
 
 library(dplyr)
@@ -8,20 +16,54 @@ library(reshape2)
 library(cowplot)
 library(stringr)
 
-setwd("/Users/axellemarchant/Documents/postdoc_Landry/AMarchant_2016-2019/papier_AMarchant_2019")
+#to set the working directory
+setwd("dir")
 
 WGD <- read.table("data/WGD.csv", header = F, sep=";")
-WGD$Duplication = "WGD"
+WGD$Duplication = "wgd"
+WGD$pair <- apply(cbind(as.character(WGD$V1), 
+                        as.character(WGD$V2)), 
+                  1, function(x) paste(sort(x), collapse="."))
+
+#Filter WGD with MSA sequence similarity:
+#If sequence similarity < 20 %, paralogs need to be in the same phylome (from phylomDB)
+#to be selected
+wgd_filter <- read.table('data/removed_WGDs.txt', header=T)
+wgd_filter$pair<- apply(cbind(as.character(wgd_filter$P1), 
+                              as.character(wgd_filter$P2)), 
+                        1, function(x) paste(sort(x), collapse="."))
+wgd_filter$filter.WGD <-1
+wgd_filter <- select(wgd_filter, pair, filter.WGD)
+WGD <- left_join(WGD, wgd_filter, by='pair')
+WGD <- filter(WGD, is.na(filter.WGD))
+WGD <- select(WGD, V1, V2, Duplication, pair)
+
 
 SSD <- read.table("data/duplication_SDS_1paire.txt", header = F, sep="\t")
 SSD$Duplication = "SSD"
+SSD$pair <- apply(cbind(as.character(SSD$V1), 
+                        as.character(SSD$V2)), 
+                  1, function(x) paste(sort(x), collapse="."))
 
+#Filter SSD with MSA sequence similarity:
+#If sequence similarity < 20 %, paralogs need to be in the same phylome (from phylomDB)
+#to be selected
+
+MSA_seq_ident_under_20 <- read.table("data/MSA_seq_ident_under_20.txt", sep="\t", header=T)
+MSA_seq_ident_under_20 <- filter(MSA_seq_ident_under_20, Duplication=="SSD")
+MSA_seq_ident_under_20$pair<- apply(cbind(as.character(MSA_seq_ident_under_20$P1), 
+                                          as.character(MSA_seq_ident_under_20$P2)), 
+                                    1, function(x) paste(sort(x), collapse="."))
+
+MSA_seq_ident_under_20 <- select(MSA_seq_ident_under_20, pair, Same_phylome)
+SSD <- left_join(SSD, MSA_seq_ident_under_20, by='pair')
+SSD <- filter(SSD, is.na(Same_phylome) | Same_phylome==1)
+
+
+SSD <- select(SSD, V1, V2, Duplication, pair)
 df <- rbind(WGD, SSD)
-colnames(df) <- c("P1", "P2", "Duplication")
+colnames(df) <- c("P1", "P2", "Duplication", "pair")
 
-df$pair <- apply(cbind(as.character(df$P1), 
-                          as.character(df$P2)), 
-                    1, function(x) paste(sort(x), collapse="."))
 
 #Organization of P1 P2 by alphabet order
 df <- select(df, Duplication, pair)
@@ -46,7 +88,7 @@ bg.p <- filter(bg.p, Experimental.System!="Co-fractionation" &
                  Experimental.System!="Proximity Label-MS" & 
                  Experimental.System!="Co-localization")
 
-#reduce the sice of the dataframe so it is easier to handle
+#reduce the size of the dataframe so it is easier to handle
 bg.p %<>% select(Systematic.Name.Interactor.A,Systematic.Name.Interactor.B,
                      Throughput, Experimental.System,Pubmed.ID)
 
@@ -107,7 +149,7 @@ df.HET <- left_join(df, bg.p.HET, by=c("pair"="ppi"))
 df.HET <- filter(df.HET, !is.na(ExpRef))
 
 bg.p.HM <- filter(bg.p, Systematic.Name.Interactor.A==Systematic.Name.Interactor.B)
-write.table(bg.p.HM, file="output/bg.p.HM_2019_02.csv", sep="\t",  quote=F, row.names=F)
+write.table(bg.p.HM, file="without_low_qual/bg.p.HM_2019_06.csv", sep="\t",  quote=F, row.names=F)
 
 #Selection of WGD and SSD pairs
 df.HM1 <- left_join(df, bg.p.HM, by=c("P1"="Systematic.Name.Interactor.A"))
@@ -304,21 +346,22 @@ complete_pairs %<>% group_by(pair) %>%
 
 
 complete_pairs %<>% group_by(pair) %>% 
-  mutate(motif.number.bg.S.PDB.Kim=ifelse(HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==0 & HETbg.PDB==0, 1,
-                           ifelse(((HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==0) | (HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==1)) & HETbg.PDB==0, 2,
-                           ifelse(HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==1 & HETbg.PDB==0, 3,
-                           ifelse(HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==0 & HETbg.PDB==1, 4,
-                           ifelse(((HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==0) | (HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==1)) & HETbg.PDB==1, 5,
-                           ifelse(HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==1 & HETbg.PDB==1, 6, "pb")))))))
+  mutate(motif.number.bg.S.PDB.Kim=ifelse(HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==0 & HETbg.PDB==0, 'NI',
+                           ifelse(((HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==0) | (HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==1)) & HETbg.PDB==0, '1HM',
+                           ifelse(HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==1 & HETbg.PDB==0, '2HM',
+                           ifelse(HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==0 & HETbg.PDB==1, 'HET',
+                           ifelse(((HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==0) | (HM1bg.S.PDB.Kim==0 & HM2bg.S.PDB.Kim==1)) & HETbg.PDB==1, '1HM.HET',
+                           ifelse(HM1bg.S.PDB.Kim==1 & HM2bg.S.PDB.Kim==1 & HETbg.PDB==1, '2HM.HET', "pb")))))))
 
 
 ##########################################
 #     Complete with data of our PCA      #
 ##########################################
 
-our_PCA <- read.table("output/PCA_motif_interaction_2019_03.tab", sep="\t", header = T)
+our_PCA <- read.table("without_low_qual/PCA_motif_interaction_2019_06_phylom.tab", sep="\t", header = T)
 
-our_PCA <- full_join(our_PCA, complete_pairs, by=c("Duplication", "pair", "P1", "P2")) #622
+our_PCA <- full_join(our_PCA, complete_pairs, by=c("Duplication", "pair", "P1", "P2"))
+nrow(our_PCA) #509
 
 #remove proteins interacting with everythings (defined as false positive in Tarassov et al., 2008) 
 #and not repertoried in biogrid
@@ -327,21 +370,23 @@ colnames(prot_remove) <- "P1"
 prot_remove$P1.Tarassov.removed <- "remove"
 our_PCA <- left_join(our_PCA, prot_remove, by="P1")
 colnames(prot_remove) <- c("P2", "P2.Tarassov.removed")
-our_PCA <- left_join(our_PCA, prot_remove, by="P2") #622 ok
-nrow(filter(our_PCA, P1.Tarassov.removed == 'remove' | P2.Tarassov.removed == 'remove')) #123
+our_PCA <- left_join(our_PCA, prot_remove, by="P2") 
+nrow(our_PCA) #509 ok
+nrow(filter(our_PCA, P1.Tarassov.removed == 'remove' | P2.Tarassov.removed == 'remove')) #110
 
 our_PCA %<>% mutate(P1.to.remove = ifelse((P1.Tarassov.removed=='remove' & (is.na(HM1bg.S.PDB.Kim) | is.na(HETbg.PDB))), 1, 0),
                     P2.to.remove = ifelse((P2.Tarassov.removed=='remove' & (is.na(HM2bg.S.PDB.Kim) | is.na(HETbg.PDB))), 1, 0))
 nrow(filter(our_PCA, P1.to.remove==1 |  P2.to.remove==1)) #27
 
-our_PCA %<>% filter(., (is.na(P1.to.remove) | P1.to.remove==0) &  (is.na(P2.to.remove) | P2.to.remove==0)) #595
+our_PCA %<>% filter(., (is.na(P1.to.remove) | P1.to.remove==0) &  (is.na(P2.to.remove) | P2.to.remove==0)) 
+nrow(our_PCA) #482
 
 #infere complete motif with both our PCA and previously reported interactions
-nrow(filter(our_PCA, is.na(motif.categories.PCA))) #309
-nrow(filter(our_PCA, is.na(motif.categories.bg.S.PDB.Kim))) #97
-nrow(filter(our_PCA, !is.na(motif.categories.PCA) & !is.na(motif.categories.bg.S.PDB.Kim))) #189
+nrow(filter(our_PCA, is.na(motif.categories.PCA))) #241
+nrow(filter(our_PCA, is.na(motif.categories.bg.S.PDB.Kim))) #78
+nrow(filter(our_PCA, !is.na(motif.categories.PCA) & !is.na(motif.categories.bg.S.PDB.Kim))) #168
 filter(our_PCA, !is.na(motif.categories.PCA) & !is.na(motif.categories.bg.S.PDB.Kim)) %>% 
-  filter(., motif.categories.PCA==motif.categories.bg.S.PDB.Kim) %>% nrow(.) #85
+  filter(., motif.categories.PCA==motif.categories.bg.S.PDB.Kim) %>% nrow(.) #72
 
 
 our_PCA$HM1bg.S.PDB.Kim <- as.numeric(our_PCA$HM1bg.S.PDB.Kim)
@@ -362,7 +407,7 @@ our_PCA %<>% group_by(pair) %>% mutate(HM2.final = ifelse((is.na(P2.Tarassov.rem
                                                    ifelse(P2.Tarassov.removed== "remove" & is.na(HM2bg) & !is.na(HM2.Kim), HM2.Kim,
                                                    ifelse(P2.Tarassov.removed== "remove" & !is.na(HM2bg) & is.na(HM2.Kim), HM2bg,
                                                    ifelse(P2.Tarassov.removed== "remove" & !is.na(HM2bg) & !is.na(HM2.Kim) & (HM2bg+HM2.Kim) > 0, 1,
-                                                   ifelse(P2.Tarassov.removed== "remove" & !is.na(HM2bg) & !is.na(HM2.Kim) & (HM2bg+HM2.Kim) == 0, 0, "pb"))))))))) %>% as.data.frame()
+                                                   ifelse(P2.Tarassov.removed== "remove" & !is.na(HM2bg) & !is.na(HM2.Kim) & (HM2bg+HM2.Kim) == 0, 0, NA))))))))) %>% as.data.frame()
 
 
 our_PCA %<>% group_by(pair) %>% mutate(HET.ourPCA = ifelse((!is.na(HET.P1P2) & !is.na(HET.P2P1) & (HET.P1P2==1 | HET.P2P1==1)), 1, 
@@ -378,7 +423,6 @@ our_PCA %<>% group_by(pair) %>% mutate(HET.final = ifelse((is.na(P1.Tarassov.rem
 
 head(our_PCA)
 
-
 #Motif interaction with previously reported and our PCA data
 our_PCA %<>% group_by(pair) %>% 
   mutate(motif.categories=ifelse((HM1.final==1 | HM2.final==1) & HET.final==1, "HM&HET",
@@ -388,15 +432,15 @@ our_PCA %<>% group_by(pair) %>%
 
 
 our_PCA %<>% group_by(pair) %>% 
-  mutate(motif.number=ifelse(HM1.final==0 & HM2.final==0 & HET.final==0, 1,
-                             ifelse(((HM1.final==1 & HM2.final==0) | (HM1.final==0 & HM2.final==1)) & HET.final==0, 2,
-                             ifelse(HM1.final==1 & HM2.final==1 & HET.final==0, 3,
-                             ifelse(HM1.final==0 & HM2.final==0 & HET.final==1, 4,
-                             ifelse(((HM1.final==1 & HM2.final==0) | (HM1.final==0 & HM2.final==1)) & HET.final==1, 5,
-                             ifelse(HM1.final==1 & HM2.final==1 & HET.final==1, 6, "pb"))))))) %>% as.data.frame()
-nrow(our_PCA) #595
+  mutate(motif.number=ifelse(HM1.final==0 & HM2.final==0 & HET.final==0, 'NI',
+                             ifelse(((HM1.final==1 & HM2.final==0) | (HM1.final==0 & HM2.final==1)) & HET.final==0, '1HM',
+                             ifelse(HM1.final==1 & HM2.final==1 & HET.final==0, '2HM',
+                             ifelse(HM1.final==0 & HM2.final==0 & HET.final==1, 'HET',
+                             ifelse(((HM1.final==1 & HM2.final==0) | (HM1.final==0 & HM2.final==1)) & HET.final==1, '1HM.HET',
+                             ifelse(HM1.final==1 & HM2.final==1 & HET.final==1, '2HM.HET', "pb"))))))) %>% as.data.frame()
+nrow(our_PCA)  #482 ok
 
-write.table(our_PCA, file="output/PCA_completed_by_Biog_Sty_2019_03.csv", sep="\t",  quote=F, row.names=F)
+write.table(our_PCA, file="without_low_qual/PCA_completed_by_Biog_Sty_2019_06_phylom.csv", sep="\t",  quote=F, row.names=F)
 
 
 #comparisons between previously reported interactions and our PCA
@@ -404,16 +448,16 @@ write.table(our_PCA, file="output/PCA_completed_by_Biog_Sty_2019_03.csv", sep="\
 
 #HM and HET never found before:
 #HM
-nrow(filter(our_PCA, HM1.PCA==1 & (is.na(HM1bg.S.PDB.Kim) | HM1bg.S.PDB.Kim==0))) #33
-nrow(filter(our_PCA, HM2.PCA==1 & (is.na(HM2bg.S.PDB.Kim) | HM2bg.S.PDB.Kim==0))) #21
-#tot HM new = 55
-nrow(filter(our_PCA, (HET.P1P2==1 | HET.P2P1==1) & (is.na(HETbg.PDB) | HETbg.PDB==0))) #22
-#tot new interaction = 77
+nrow(filter(our_PCA, HM1.PCA==1 & (is.na(HM1bg.S.PDB.Kim) | HM1bg.S.PDB.Kim==0)))
+nrow(filter(our_PCA, HM2.PCA==1 & (is.na(HM2bg.S.PDB.Kim) | HM2bg.S.PDB.Kim==0)))
+
+nrow(filter(our_PCA, (HET.P1P2==1 | HET.P2P1==1) & (is.na(HETbg.PDB) | HETbg.PDB==0)))
+
 
 #HM and HET found before and tested but not detected here:
-nrow(filter(our_PCA, HM1.PCA==0 & HM1bg.S.PDB.Kim==1)) #42
-nrow(filter(our_PCA, HM2.PCA==0 & HM2bg.S.PDB.Kim==1)) #48
-#tot HM not detected = 90
-nrow(filter(our_PCA, HET.P1P2==0 & HET.P2P1== 0 & HETbg.PDB==1)) #49
-#tot 136
+nrow(filter(our_PCA, HM1.PCA==0 & HM1bg.S.PDB.Kim==1)) 
+nrow(filter(our_PCA, HM2.PCA==0 & HM2bg.S.PDB.Kim==1)) 
+
+nrow(filter(our_PCA, HET.P1P2==0 & HET.P2P1== 0 & HETbg.PDB==1)) 
+
 

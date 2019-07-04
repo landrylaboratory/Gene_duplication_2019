@@ -8,17 +8,17 @@ Scripts for "The role of structural pleiotropy and regulatory evolution in the r
 These scripts are used to analyze the RNAseq data.
 
 1.cleaning_RNAseq.sh
-Reads were cleaned using cutadapt (Martin 2011). We removed the first 12 bp, trimmed the poly-A tail from the 3’ end, trimmed low-quality ends using a cutoff of 15 (phred quality + 33) and discarded reads shorter than 30 bp. The number of reads before and after cleaning can be found in Table S3. Raw sequences can be downloaded under the NCBI BioProject ID PRJNA480398.
+Reads were cleaned using cutadapt (Martin 2011). We removed the first 12 bp, trimmed the poly-A tail from the 3'end, trimmed low-quality ends using a cutoff of 15 (phred quality + 33) and discarded reads shorter than 30 bp. The number of reads before and after cleaning can be found in Table S3. Raw sequences can be downloaded under the NCBI BioProject ID PRJNA480398.
 
 2.create_gff_increasing_gene_window_with_3utr.R
-Because we used a 3’mRNA-Seq Library, reads mapped largely to 3’UTRs. We increased the window of annotated genes in the SGD annotation (saccharomyces_cerevisiae_R64-2-1_20150113.gff version) using the UTR annotation from (Nagalakshmi et al., 2008).
+Because we used a 3'mRNA-Seq Library, reads mapped largely to 3'UTRs. We increased the window of annotated genes in the SGD annotation (saccharomyces_cerevisiae_R64-2-1_20150113.gff version) using the UTR annotation from (Nagalakshmi et al., 2008).
 
 3.alignment_and_count.sh
 Cleaned reads were aligned on the reference genome of S288c from SGD (S288C_reference_genome_R64-2-1_20150113.fsa version) using bwa (Li and Durbin, 2009). Based on the reference genes-UTR annotation, the number of mapped reads per genes was estimated using htseq-count of the Python package HTSeq (Anders et al., 2015) and reported in Table S3.
 
 
 #########################################################################
-#	Scripts_for_plasmid_based_PCA_for_orthologous_proteins      		#
+#	Scripts_for_plasmid_based_PCA_for_orthologous_proteins      	#
 #########################################################################
 
 These scripts are used to analyze the plasmid-based PCA experiments.
@@ -62,28 +62,25 @@ The distribution of PCA scores was modeled per duplication type (SSD and WGD) an
 4.Complete_HM.HET_with_literature_and_databases.R
 To complement our experimental data, we extracted HM and HET of paralogs published in BioGRID version BIOGRID-3.5.166 and data from literature (Stynen et al., 2018; Kim et al., 2019). Output are organized by pair.
 
-5.Age_of_duplication.R
-We estimated the age of SSDs using gene phylogenies.
-
-6.HM_compiled_data.R
+5.HM_compiled_data.R
 To complement our experimental data, we extracted HM and HET of paralogs and singletons published in BioGRID version BIOGRID-3.5.166 and data from literature (Stynen et al., 2018; Kim et al., 2019). Output are organized orf per orf.
 
-7.HM_comparison_among_groups_of_genes.R
+6.HM_comparison_among_groups_of_genes.R
 Comparison of HM proportion among singletons and duplicates proteins
 
-8.HM_HET_expression_duplication.r
+7.HM_HET_expression_duplication.r
 Analyse of factor that could be implicated into the HM and HET maintenance or deletion.
 Particularly, we focused on duplication mechanisms and expression.
 It returns a summary table of HM / HET repartition among duplicates: TableS1
 
-9.Main_Figures.R
+8.Main_Figures.R
 Script to generate main figures from 6.HM_compiled_data.R and 8.HM_HET_expression_duplication.r scripts output
 
-10.Sup_figures.R
+9.Sup_figures.R
 Script to generate supplementary figures from 6.HM_compiled_data.R and 8.HM_HET_expression_duplication.r scripts output
 
 #########################################################################
-#	Scripts_for_interface_conservation folder			#
+#	Scripts_for_interface_conservation_yeast folder			#
 #########################################################################
 
 001_extract_sequences.py: This script extracts a series of sequences from a file. In this case, it was used to extract the sequences of duplicated genes from the file with the reference proteome.
@@ -104,7 +101,31 @@ Script to generate supplementary figures from 6.HM_compiled_data.R and 8.HM_HET_
 
 009_interface_counter.ipynb: This is a Jupyter notebook that takes the FASTA formatted interface files and outputs per chain counts of total residues and interface residues. This output was later integrated to table S11. 009_interface_counter.py is a Python-formatted version of the same code.
 
-010_figure_S6.R: This script produces figure S6 from the processed files in the Data folder.
+010_figure_2G_2H.R: This script produces figures 2G and 2H from the processed files in the Data folder.
+
+#########################################################################
+#       Scripts_for_interface_conservation_human folder                 #
+#########################################################################
+
+001_extract_longest_isoforms.py: This script will extract the longest isoforms for each gene in the list of paralogs from the human reference proteome. The human reference proteome can be downloaded from:
+http://useast.ensembl.org/info/data/ftp/index.html
+
+002_alignments.sh: This script performs the alignments to the whole set of sequences from the PDB downloaded on September 21st, 2017.
+
+003_filter_alignments.R: This script looks at the alignments and filters the matches for each protein. It can be executed as follows:
+Rscript 003_filter_alignments.R Data/PDB_matches_human_paralogs.aln Data/human_paralog_pair_list <output_folder> 0
+
+004_download_PDB.sh: This script receives PDB IDs to download them. It is used to download the structures that matched the paralogs from the output of the previous step. These structures are later referred to in the code as pdb_folder.
+
+005_gather_PDB_info_human.ipynb: Given an alignment of protein sequences to PDB chains, pairs of paralogs, and downloaded files with the asymmetrical unit, this script extracts information on which chains from which complexes from the PDB map to the given sequences. It returns a table that matches proteins to PDB structures and their paralogs, as well as a table with the best structures that represent each of the observed complexes. This is a Jupyter notebook. 005_gather_PDB_info.py is a Python-formatted version of the same code.
+
+006_interface_conservation_analysis_human.ipynb: This is the main script that looks for sequence conservation in interfaces. It uses the 001_generate_bio_assembly.py script and code from the 004_call_interfaces.py script from the scripts_for_simulations folder. It performs all the alignments and matches proteins to their corresponding PhylomeDB phylogenies (phylome_0076 was used for this analysis). This is a Jupyter notebook. 006_interface_conservation_analysis.py is a Python-formatted version of the same code.
+
+007_pdb2fasta_interfaces.sh: This is a modified version of Pierre Poulain's pdb2fasta.sh script available at https://bitbucket.org/pierrepo/pdb2fasta/. It saves PDB files as FASTA formatted files with interface residues in lowercase and the rest of the sequence in uppercase.
+
+008_interface_counter.py: This script takes the FASTA formatted interface files and outputs per chain counts of total residues and interface residues. This output was later integrated to the human structures in table S11.
+
+009_figure_S6.R: This script produces figure S6 from the processed files in the Data folder.
 
 #########################################################################
 #	Scripts_for_simulations folder					#
@@ -116,24 +137,29 @@ Script to generate supplementary figures from 6.HM_compiled_data.R and 8.HM_HET_
 
 003_foldx_repair_slurm.sh: This script takes a biological assembly and applies the FoldX Repair function for energy minimization. It is written to submit a job to a SLURM manager.
 
-004.1_call_interfaces.py: This script is used to call interface residues from a biological assembly. Interfaces are called according to two methods: Levy's based on solvent accessibility changes and Tsai's based on distance to the other chain. Only interfaces obtained by the distance definition were used for further analyses because of the general overlap of residues. Output files are PDB formatted with the b-factor replaced by the region identified with the following code: 
-	- 0.00 non-interfaces (distance)/ surface (solvent accessibility) 
-	- 0.25 not used with distances / interior (solvent accessibility)
-	- 0.50 not used with distances / support (solvent accessibility)
-	- 0.75 nearby (distance)/ rim (solvent accessibility)
-	- 1.00 contacting (distance)/ core (solvent accessibility)
+004_call_interfaces.py: This script is used to call interface residues from a biological assembly. Interfaces are called according Tsai's based on distance to the other chain (Tsai, et al. 1996. Crit Rev Biochem Mol Biol). Only interfaces obtained by the distance definition were used for further analyses because of the general overlap of residues. Output files are PDB formatted with the b-factor replaced by the region identified with the following code:
+        - 0.00 non-interfaces (distance)
+        - 0.75 nearby (distance)
+        - 1.00 contacting (distance)
 
 This script depends on the helper functions from:
-	- 004.2_call_interfaces_helper.py: helper functions for parsing PDB coordinates.
+        - call_interfaces_helper.py: helper functions for parsing PDB coordinates.
 
 005.1_simulations_admin.sh: This is the admin script that performs the simulations with FoldX. It is designed to work with SLURM and parallelize replicates, with the results organized in folders numbered by replicates and the successive substitutions. It prepares a script to submit the job to SLURM with each of the replicates as arguments. It depends on the following scripts:
 	- 005.2_foldx_coevol_config.sh: This is a helper script that is used to load parameters set by the user.
 	- 005.3_simulations_main.sh: This is the main loop of the simulations. It manages the output FoldX files by organizing them in folders and calls the other scripts.
-	- 005.4_substitution_generator­.py: This is the script that generates random substitutions based on a transition matrix for randomly chosen residues.
+	- 005.4_substitution_generator.py: This is the script that generates random substitutions based on a transition matrix for randomly chosen residues.
 	- 005.5_apply_selection.R: This is the script that applies the selection function to the resulting mutants. 
 
-006_figures_4_5_S9_S10_S11_S12.R: This is the script that generates figures 4, 5, S9, S10, S11, and S12 from the processed files in the Data folder.
+006_gather_simulations.sh: This script looks at the results of a simulation run and gathers them with a tabular format in a folder named "Final_results" inside the main folder of the simulation run.
 
+007_tools_analysis_simulations.R: This script loads some functions that can be used to process the results from the simulations. It shows examples of how to use them to produce datasets similar to those used for the figures in the paper.
 
+008_figures_4_5_S11_S13_S14_S15.R: This is the script that generates figures 4, 5, S11, S13, S14, and S15 from the processed files in the Data folder.
 
+#########################################################################
+#       Scripts_for_pfam_similarity folder                              #
+#########################################################################
+
+001_pfam_similarity.R: This is the script that does the analysis of the pfam domain annotation similarities.
 

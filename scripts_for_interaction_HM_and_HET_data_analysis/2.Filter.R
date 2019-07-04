@@ -1,11 +1,15 @@
 ###########################################################################################
-#                             Script to filter PCA data                               #
+#                             Script to filter PCA data                                   #
 ###########################################################################################
+
+#Colonies flagged as irregular by gitter (as S or S, C flags) or that did not grow on the 
+#last diploid selection step or on DMSO medium were considered as missing data. We considered 
+#only bait-prey pairs with at least four replicates and used the median of colony sizes as PCA 
+#signal. The data was finally filtered based on the completeness of paralogous pairs so we could 
+#test HMs and HETs systematically. 
+
 rm(list=ls())
 
-setwd("/Users/axellemarchant/Documents/postdoc_Landry/AMarchant_2016-2019/papier_AMarchant_2019")
-
-require(gitter)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -18,6 +22,8 @@ library(VennDiagram)
 library(mixtools)
 library(magrittr)
 
+#set the working directory to dir
+setwd("")
 
 df <- read.table("output/PCA_data_2019_02.tab", sep="\t", header=T)
 
@@ -131,11 +137,11 @@ df.batch1 <- PCA1_2 %>% filter((Condition=="S2" | Condition =="MTX2") & (Plate==
 a = df.batch1 %>% filter(Condition=="S2") %>% select(log2, replicat_plate, row, col)
 (nrow(filter(a, is.na(log2)))/nrow(a))*100 #0
 b = df.batch1 %>% filter(Condition=="MTX2")
-(nrow(filter(b, is.na(log2)))/nrow(b))*100 #0.23%
+(nrow(filter(b, is.na(log2)))/nrow(b))*100 #0.33%
 df.batch1 = inner_join(b, a, by=c("replicat_plate", "row", "col")) %>%
   rename(log2 = log2.x) %>% rename(log2S = log2.y) %>%
   mutate(log2 = ifelse(log2S < 8.5, NA, log2)) %>% as.data.frame()
-(nrow(filter(df.batch1 , is.na(log2)))/nrow(df.batch1 ))*100 #0.11
+(nrow(filter(df.batch1 , is.na(log2)))/nrow(df.batch1 ))*100 #4.23
 
 filterS <- function(a,b)
 {
@@ -147,7 +153,9 @@ filterS <- function(a,b)
 df.batch2 <- df.noB %>% filter((Plate==1 | Plate==2) &  (PCA=="PCA1" | PCA=="PCA2") &
                                  (Condition=="S4" | Condition =="DMSO2" | (Condition=="MTX2" & replicat_plate > 3)))
 
-#For batch 2 and PCA2, more complexe : see figure
+#For batch 2 and PCA2 the design was more complexe with several diploid selections print
+#(Used for an other study)
+
 #DMSO.R1 --> from S4R2
 a = df.batch2 %>% filter(Condition=="S4" & replicat_plate==2) %>% select(log2, PCA, Plate, row, col)
 b = df.batch2 %>% filter(Condition=="DMSO2" & replicat_plate==1)
@@ -212,7 +220,7 @@ df.PCA2.MTX = filterS(a,b)
 
 # PCA3 
 PCA3 <- filter(df.noB, PCA=="PCA3")
-#meme numero de repliques entre S2 et MTX pour batch3
+#same number of replicates between S2 and MTX for batch3
 a = PCA3 %>% filter(Condition=="S2") %>% select(log2, row, col, Plate)
 (nrow(filter(a, is.na(log2)))/nrow(a))*100 #0
 b = PCA3 %>% filter(Condition=="MTX2")
