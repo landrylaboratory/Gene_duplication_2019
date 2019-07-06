@@ -153,9 +153,8 @@ This script depends on the helper functions from:
 
 006_gather_simulations.sh: This script looks at the results of a simulation run and gathers them with a tabular format in a folder named "Final_results" inside the main folder of the simulation run.
 
-007_tools_analysis_simulations.R: This script loads some functions that can be used to process the results from the simulations. It shows examples of how to use them to produce datasets similar to those used for the figures in the paper.
+007_tools_simulations_figures_4_5_S12_S13_S14_S15_S16: This script loads some functions that allow the analyses of the simulations after they are gathered by the previous script. It then uses these functions to produce figures 4, 5, S12, S13, S14, S15, and S16 from the paper.
 
-008_figures_4_5_S11_S13_S14_S15.R: This is the script that generates figures 4, 5, S11, S13, S14, and S15 from the processed files in the Data folder.
 
 #########################################################################
 #       Scripts_for_pfam_similarity folder                              #
