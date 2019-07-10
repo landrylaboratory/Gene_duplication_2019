@@ -125,7 +125,7 @@ Rscript 003_filter_alignments.R Data/PDB_matches_human_paralogs.aln Data/human_p
 
 008_interface_counter.py: This script takes the FASTA formatted interface files and outputs per chain counts of total residues and interface residues. This output was later integrated to the human structures in table S11.
 
-009_figure_S6.R: This script produces figure S6 from the processed files in the Data folder.
+009_figure2_suppl6.R: This script produces figure 2-figure supplement 6 from the processed files in the Data folder.
 
 #########################################################################
 #	Scripts_for_simulations folder					#
@@ -153,12 +153,12 @@ This script depends on the helper functions from:
 
 006_gather_simulations.sh: This script looks at the results of a simulation run and gathers them with a tabular format in a folder named "Final_results" inside the main folder of the simulation run.
 
-007_tools_simulations_figures_4_5_S12_S13_S14_S15_S16: This script loads some functions that allow the analyses of the simulations after they are gathered by the previous script. It then uses these functions to produce figures 4, 5, S12, S13, S14, S15, and S16 from the paper.
+007_tools_simulations_figures_4_5: This script loads some functions that allow the analyses of the simulations after they are gathered by the previous script. It then uses these functions to produce figures 4 and its supplements (2 to 4), as well as figure 5 and its supplements (1 to 3).
 
 
 #########################################################################
 #       Scripts_for_pfam_similarity folder                              #
 #########################################################################
 
-001_pfam_similarity.R: This is the script that does the analysis of the pfam domain annotation similarities.
+001_pfam_similarity.R: This is the script that does the analysis of the pfam domain annotation similarities. It produces figure 3-figure supplement 1.
 

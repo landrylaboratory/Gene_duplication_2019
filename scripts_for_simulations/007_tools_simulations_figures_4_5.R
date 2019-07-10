@@ -1,7 +1,11 @@
 #########################################################################################
 ####                 Tools_analysis_simulations                                      ####
 #### This script provides functions that are helpful for the analysis of simulations ####
-#### and examples on their usage.                                                    ####
+#### and uses them to produce the following figures from the paper:                  ####
+#### - Figure 4                                                                      ####
+#### - Figure 4- figure supplements 2 to 4                                           ####
+#### - Figure 5                                                                      ####
+#### - Figure 5- figure supplements 1 to 3                                           ####
 #########################################################################################
 
 # Load libraries
@@ -246,6 +250,16 @@ lm_eqn <- function(df){
   as.character(as.expression(eq));
 }
 
+# Define a formula to get a p-value based on the z-score of the differences of two binomial distributions
+# Discussed here: https://stats.stackexchange.com/questions/113602/test-if-two-binomial-distributions-are-statistically-different-from-each-other
+get_pvals_binomial <- function(p1, p2, n1, n2){
+  phat <- (n1*p1 + n2*p2)/(n1 + n2)
+  z_scores <- (p1 - p2) / (phat*(1 - phat)*(1/n1 + 1/n2))
+  pvals <- ifelse(pnorm(-abs(z_scores)) < 2.2e-16, 'p < 2.2e-16', 
+                  toString(format(pnorm(-abs(z_scores)), exponential = TRUE)))
+  return(pvals)
+}
+
 # Define limits for points out of bounds
 
 y_min <- -5
@@ -255,7 +269,7 @@ x_max <- 20
 
 #### Use the functions to produce an example of the plots ####
 
-setwd('/home/axelle/Documents/Hiver2019/Paper_duplication/Revisions_eLife_AC/Scripts/scripts_for_simulations/')
+setwd(<path_to_scripts_for_simulations>)
 
 #### Load the data ####
 
@@ -454,7 +468,7 @@ p_1M38_sel_BB <- full_dataset %>%
 
 # Save the panels for figure 4 #
 final_fig4 <- plot_grid(fig_4A, p_1M38_nosel, p_1M38_sel_AA_BB,
-                        p_1M38_sel_AB, p_1M38_sel_AA, p_1M38_sel_BB,
+                        p_1M38_sel_AA, p_1M38_sel_BB,p_1M38_sel_AB, 
                         nrow = 3, 
                         labels = c('A', 'B', 'C', 'D', 'E', 'F'))
 
@@ -478,6 +492,10 @@ double_mutants_sel_AA_BB %<>%
 double_mutants_sel_AB %<>%
   mutate(exp_ddg_het = (ddG_HM_AA + ddG_HM_BB)/2)
 
+# Relevel to show red on top
+double_mutants_sel_AA_BB$Verdict <- factor(double_mutants_sel_AA_BB$Verdict, levels = c('Lost', 'Fixed'))
+double_mutants_sel_AB$Verdict <- factor(double_mutants_sel_AB$Verdict, levels = c('Lost', 'Fixed'))
+
 fig_5A <- double_mutants_sel_AA_BB %>%
   mutate(out_of_bounds = ifelse(or(exp_ddg_het > x_max,
                                    or(exp_ddg_het < x_min,
@@ -493,8 +511,8 @@ fig_5A <- double_mutants_sel_AA_BB %>%
   facet_grid(~Scenario) +
   geom_point(aes(colour = Verdict, alpha = Verdict, shape = out_of_bounds)) +
   scale_shape_manual(values = c(16, 17), guide = 'none') +
-  scale_colour_manual(values = c("red", "black")) +
-  scale_alpha_manual(values = c(1, 0.2)) +
+  scale_colour_manual(values = c("black", "red")) +
+  scale_alpha_manual(values = c(0.2, 1)) +
   theme(plot.title = element_text(hjust = 0.5, face = 'bold'), 
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(size = 0.5),
@@ -534,8 +552,8 @@ fig_5B <- double_mutants_sel_AB %>%
   facet_grid(~Scenario) +
   geom_point(aes(colour = Verdict, alpha = Verdict, shape = out_of_bounds)) +
   scale_shape_manual(values = c(16, 17), guide = 'none') +
-  scale_colour_manual(values = c("red", "black")) +
-  scale_alpha_manual(values = c(1, 0.2)) +
+  scale_colour_manual(values = c("black", "red")) +
+  scale_alpha_manual(values = c(0.2, 1)) +
   theme(plot.title = element_text(hjust = 0.5, face = 'bold'), 
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(size = 0.5),
@@ -560,6 +578,15 @@ fig_5B <- double_mutants_sel_AB %>%
            parse = TRUE, colour = 'black')
 fig_5B
 
+fig_5 <- plot_grid(fig_5A, fig_5B, ncol = 2, labels = c('A', 'B'))
+
+ggsave(filename = 'Figures/Figure5.pdf',
+       width = 14, height = 7, dpi = 500, device = cairo_pdf, plot = fig_5)
+ggsave(filename = 'Figures/Figure5.png',
+       width = 14, height = 7, dpi = 300, device = 'png', plot = fig_5)
+
+# Test for the difference in the magnitude of deviations from expectations between 
+# mutations fixed under selection for the HET and under selction for the two HMs
 double_mutants_sel_AA_BB %<>% mutate(diff_exp_obs = ddG - exp_ddg_het)
 double_mutants_sel_AB %<>% mutate(diff_exp_obs = ddG - exp_ddg_het)
 
@@ -586,32 +613,8 @@ fig_5C <- data_fig_5C %>%
   ylim(-20, 14)
 fig_5C
 
-fig_5D <- data_fig_5C %>%
-  filter(Verdict == 'Lost') %>%
-  ggplot(aes(x = Scenario, 
-             y = diff_exp_obs, fill = Scenario)) + 
-  facet_wrap(~Verdict) +
-  scale_fill_manual(values = c('gray', 'gray')) +
-  geom_point(position = position_jitterdodge(jitter.width = 0.25)) +
-  geom_violin(position = position_dodge(), alpha = 0.5) + 
-  stat_compare_means(method = 't.test', comparisons = comparison_list, paired = FALSE,
-                     position = 'top', 
-                     label.y = 12.5) +
-  theme(legend.position = 'none',
-        axis.title = element_text(face = 'bold')) +
-  ylab('Observed ΔΔG - Expected ΔΔG') + xlab('Selection on') +
-  scale_x_discrete(labels = c('Both HMs', 'HET AB'))  +
-  ylim(-20, 14)
-fig_5D
 
-fig_5 <- plot_grid(fig_5A, fig_5B, fig_5C, fig_5D, ncol = 2, labels = c('A', 'B', 'C', 'D'))
-
-ggsave(filename = 'Figures/Figure5.pdf',
-       width = 14, height = 14, dpi = 500, device = cairo_pdf, plot = fig_5)
-ggsave(filename = 'Figures/Figure5.png',
-       width = 14, height = 14, dpi = 300, device = 'png', plot = fig_5)
-
-#### Figure S12 ####
+#### Figure 4 - figure supplement 2 ####
 
 # Load the figures of the PDB structures
 fig_1a82 <- ggdraw() + draw_image('Data/1A82_new.png')
@@ -656,16 +659,16 @@ legend <- get_legend(p_all + theme(legend.position = 'top',
 header_pdb <- plot_grid(NULL, fig_1a82, fig_1m38, fig_2jky, fig_2o1v, fig_3d8x, fig_4fgw, NULL, nrow = 1,
                         rel_widths = c(0.2, 1, 1, 1, 1, 1, 1, 0.1))
 
-fig_s12 <- plot_grid(header_pdb, legend, p_all,
+fig4_suppl2 <- plot_grid(header_pdb, legend, p_all,
                      rel_heights = c(0.5, 0.05, 3), ncol = 1)
 
-ggsave(filename = 'Figures/FigureS12.pdf',
-       width = 28, height = 28, dpi = 500, device = cairo_pdf, plot = fig_s12)
-ggsave(filename = 'Figures/FigureS12.png',
-       width = 28, height = 28, dpi = 300, device = 'png', plot = fig_s12)
+ggsave(filename = 'Figures/Figure 4-figure_supplement_2.pdf',
+       width = 28, height = 28, dpi = 500, device = cairo_pdf, plot = fig4_suppl2)
+ggsave(filename = 'Figures/Figure 4-figure_supplement_2.png',
+       width = 28, height = 28, dpi = 300, device = 'png', plot = fig4_suppl2)
 
 
-#### Figure S13 ####
+#### Figure 4 - figure supplement 3 ####
 
 # Load results from simulations with new parameters
 
@@ -748,15 +751,83 @@ legend <- get_legend(p_all + theme(legend.position = 'top',
 ) +
   guides(color = guide_legend(override.aes = list(size=10))))
 
-fig_s13 <- plot_grid(legend, p_all,
+fig4_suppl3 <- plot_grid(legend, p_all,
                     rel_heights = c(0.05, 3), ncol = 1)
 
-ggsave(filename = 'Figures/FigureS13.pdf',
-       width = 21, height = 21, dpi = 500, device = cairo_pdf, plot = fig_s13)
-ggsave(filename = 'Figures/FigureS13.png',
-       width = 21, height = 21, dpi = 300, device = 'png', plot = fig_s13)
+ggsave(filename = 'Figures/Figure 4-figure_supplement_3.pdf',
+       width = 21, height = 21, dpi = 500, device = cairo_pdf, plot = fig4_suppl3)
+ggsave(filename = 'Figures/Figure 4-figure_supplement_3.png',
+       width = 21, height = 21, dpi = 300, device = 'png', plot = fig4_suppl3)
 
-#### Figure S14 #### 
+#### Figure 4 - figure supplement 4 ####
+
+# Put the data together (loaded for figure 4)
+full_dataset <- rbind(sel_AA_BB_1a82$all_ddgs, sel_AB_1a82$all_ddgs,
+                      sel_AA_BB_1m38$all_ddgs, sel_AB_1m38$all_ddgs,
+                      sel_AA_BB_2jky$all_ddgs, sel_AB_2jky$all_ddgs,
+                      sel_AA_BB_2o1v$all_ddgs, sel_AB_2o1v$all_ddgs,
+                      sel_AA_BB_3d8x$all_ddgs, sel_AB_3d8x$all_ddgs,
+                      sel_AA_BB_4fgw$all_ddgs, sel_AB_4fgw$all_ddgs)
+
+single_mutants_all <- extract_single_mutants(full_dataset)
+
+single_mutants_all$Verdict <- factor(single_mutants_all$Verdict, levels = c('Lost', 'Fixed'))
+
+p_all_facet <- single_mutants_all %>% 
+  mutate(out_of_bounds = ifelse(or(homo_ddg_be > x_max,
+                                   or(homo_ddg_be < x_min,
+                                      or(het_ddg_be > y_max, het_ddg_be < y_min))),
+                                1, 0)) %>%
+  mutate(homo_ddg_be = ifelse(homo_ddg_be > x_max, x_max,
+                              ifelse(homo_ddg_be < x_min, x_min, homo_ddg_be)),
+         ddG = ifelse(het_ddg_be > y_max, y_max, 
+                      ifelse(het_ddg_be < y_min, y_min, het_ddg_be)),
+         out_of_bounds = as.factor(out_of_bounds)
+  ) %>%
+  ggplot(aes(y = het_ddg_be, x = homo_ddg_be, color = Verdict, shape = out_of_bounds)) + 
+  facet_grid(Scenario ~ PDB, labeller = label_wrap_gen(width = 15)) +
+  scale_color_manual(values = c('black', 'red')) +
+  scale_shape_manual(values = c(16, 17), guide = 'none') +
+  geom_point(aes(alpha = Verdict), size = 2) +
+  scale_alpha_manual(values = c(0.2, 1)) +
+  theme(panel.background = element_rect(fill = "white", colour = "grey50"),
+        axis.text.x= element_text(size=15), axis.text.y= element_text(size=15), 
+        axis.title.x = element_text(size=20, face = "bold"), axis.title.y = element_text(size=20, face = "bold"))+
+  theme(plot.title = element_text(size = 20, face = "bold",family="Arial", hjust = 0.5),
+        legend.key = element_rect(fill = "white"), legend.title = element_blank(),
+        legend.text=element_text(size=12), legend.position = "none",
+        legend.justification = "center")+
+  guides(color = guide_legend(override.aes = list(size=3))) +
+  ylab("ΔΔG HET (Kcal/mol)") + xlab("ΔΔG HM (Kcal/mol)") + 
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + 
+  xlim(x_min, x_max) + ylim(y_min, y_max) +
+  stat_cor(method = 'pearson', label.x.npc = 0.35,
+           label.y.npc = 0.1, show.legend = FALSE,
+           inherit.aes = FALSE,
+           aes(x = het_ddg_be, y = homo_ddg_be, label = gsub(x = ..label.., replacement = 'r', pattern = 'R')),
+           size = 6
+  ) +
+  theme(panel.border = element_rect(linetype = "solid", colour = "gray50", size = 1),
+        strip.text.x = element_text(size = 20, face = 'bold'),
+        strip.text.y = element_text(size = 20, face = 'bold'),
+        strip.background = element_rect(fill = 'white')) +
+  geom_abline(slope = 1, intercept = 0, linetype = 'dashed')
+
+header_pdb <- plot_grid(NULL, fig_1a82, fig_1m38, fig_2jky, fig_2o1v, fig_3d8x, fig_4fgw, NULL, nrow = 1,
+                        rel_widths = c(0.2, 1, 1, 1, 1, 1, 1, 0.1))
+
+legend <- get_legend(p_all_facet + theme(legend.position = 'top', 
+                                         legend.text=element_text(size=20)) +
+                       guides(color = guide_legend(override.aes = list(size=4))))
+
+fig4_suppl4 <- plot_grid(header_pdb, legend, p_all_facet, rel_heights = c(1, 0.2, 4), ncol = 1)
+
+ggsave(filename = 'Figures/Figure 4-figure_supplement_4.pdf',
+       width = 28, height = 14, dpi = 500, device = cairo_pdf, plot = fig4_suppl4)
+ggsave(filename = 'Figures/Figure 4-figure_supplement_4.png',
+       width = 28, height = 14, dpi = 300, device = 'png', plot = fig4_suppl4)
+
+#### Figure 5 - figure supplement 1 #### 
 
 # Put the data together (loaded for figure 4)
 full_dataset <- rbind(sel_AA_BB_1a82$all_ddgs, sel_AB_1a82$all_ddgs,
@@ -816,6 +887,8 @@ labels_lost_het$Label <- labels_list_lost
 labels_fixed <- rbind(labels_fixed_het, labels_fixed_hm)
 labels_lost <- rbind(labels_lost_het, labels_lost_hm)
 
+double_mutants_all$Verdict <- factor(double_mutants_all$Verdict, levels = c('Lost', 'Fixed'))
+
 p_facet_double_mutants <- double_mutants_all %>%
   mutate(out_of_bounds = ifelse(or(exp_ddg_het > x_max,
                                    or(exp_ddg_het < x_min,
@@ -831,8 +904,8 @@ p_facet_double_mutants <- double_mutants_all %>%
   facet_grid(Scenario ~ PDB) +
   geom_point(aes(colour = Verdict, alpha = Verdict, shape = out_of_bounds)) +
   scale_shape_manual(values = c(16, 17), guide = 'none') +
-  scale_colour_manual(values = c("red", "black")) +
-  scale_alpha_manual(values = c(1, 0.2)) +
+  scale_colour_manual(values = c("black", "red")) +
+  scale_alpha_manual(values = c(0.2, 1)) +
   theme(plot.title = element_text(hjust = 0.5, face = 'bold'), 
         panel.background = element_rect(fill = "white"),
         legend.text=element_text(size=15),
@@ -863,22 +936,19 @@ legend <- get_legend(p_facet_double_mutants + theme(legend.position = 'top',
 header_pdb <- plot_grid(NULL, fig_1a82, fig_1m38, fig_2jky, fig_2o1v, fig_3d8x, fig_4fgw, NULL, nrow = 1,
                         rel_widths = c(0.2, 1, 1, 1, 1, 1, 1, 0.1))
 
-fig_s14 <- plot_grid(header_pdb, legend, 
+fig5_suppl1 <- plot_grid(header_pdb, legend, 
                      p_facet_double_mutants, rel_heights = c(0.8, 0.2, 3), ncol = 1)
 
-ggsave(filename = 'Figures/FigureS14.pdf',
-       width = 28, height = 14, dpi = 500, device = cairo_pdf, plot = fig_s14)
-ggsave(filename = 'Figures/FigureS14.png',
-       width = 28, height = 14, dpi = 300, device = 'png', plot = fig_s14)
+ggsave(filename = 'Figures/Figure 5-figure_supplement_1.pdf',
+       width = 28, height = 14, dpi = 500, device = cairo_pdf, plot = fig5_suppl1)
+ggsave(filename = 'Figures/Figure 5-figure_supplement_1.png',
+       width = 28, height = 14, dpi = 300, device = 'png', plot = fig5_suppl1)
 
-#### Figure S15 ####
+#### Figure 5 - figure supplement 2 ####
 
-single_mutants_sel_AA_BB <- extract_single_mutants(sel_AA_BB_1m38$all_ddgs)
-single_mutants_sel_AB <- extract_single_mutants(sel_AB_1m38$all_ddgs)
+data_fig5_suppl2A <- assign_quadrants_single_mutants(df = single_mutants_sel_AA_BB)
 
-data_fig_S15A <- assign_quadrants_single_mutants(df = single_mutants_sel_AA_BB)
-
-fig_S15A <- data_fig_S15A %>% 
+fig5_suppl2A <- data_fig5_suppl2A %>% 
   ggplot(aes(x = quadrant, y = ddg, fill = Complex)) +
   geom_point(aes(colour = Complex),
              position = position_jitterdodge(jitter.width = 0.25)) +
@@ -895,11 +965,11 @@ fig_S15A <- data_fig_S15A %>%
         axis.text.y = element_text(size = 12)) +
   xlab('Class of mutation') + ylab('ΔΔG (kcal/mol)') + labs(fill = '') +
   ylim(-5,10)
-fig_S15A
+fig5_suppl2A
 
-data_fig_S15B <- assign_quadrants_single_mutants(df = single_mutants_sel_AB)
+data_fig5_suppl2B <- assign_quadrants_single_mutants(df = single_mutants_sel_AB)
 
-fig_S15B <- data_fig_S15B %>% 
+fig5_suppl2B <- data_fig5_suppl2B %>% 
   ggplot(aes(x = quadrant, y = ddg, fill = Complex)) +
   geom_point(aes(colour = Complex),
              position = position_jitterdodge(jitter.width = 0.25)) +
@@ -915,16 +985,16 @@ fig_S15B <- data_fig_S15B %>%
         axis.line = element_line(size = 0.5)) +
   xlab('Class of mutation') + ylab('ΔΔG (kcal/mol)') + labs(fill = '') +
   ylim(-5,10)
-fig_S15B
+fig5_suppl2B
 
-p_effect_sizes <- plot_grid(fig_S15A, NULL, fig_S15B, labels = c('A', NULL, 'B'), nrow = 3, rel_heights = c(1, 0.1, 1))
+p_effect_sizes <- plot_grid(fig5_suppl2A, NULL, fig5_suppl2B, labels = c('A', NULL, 'B'), nrow = 3, rel_heights = c(1, 0.1, 1))
 
-ggsave(filename = 'Figures/FigureS15.pdf',
+ggsave(filename = 'Figures/Figure 5-figure_supplement_2.pdf',
        device = cairo_pdf, width = 7, height = 14, plot = p_effect_sizes, dpi = 500)
-ggsave(filename = 'Figures/FigureS15.png',
+ggsave(filename = 'Figures/Figure 5-figure_supplement_2.png',
        device = 'png', width = 7, height = 14, plot = p_effect_sizes, dpi = 300)
 
-#### Plot fixation rates (figure S16) ####
+#### Figure 5 - figure supplement 3 ####
 
 double_mutants_sel_AA_BB <- extract_double_mutants(sel_AA_BB_1m38$all_ddgs)
 double_mutants_sel_AB <- extract_double_mutants(sel_AB_1m38$all_ddgs)
@@ -932,9 +1002,28 @@ double_mutants_sel_AB <- extract_double_mutants(sel_AB_1m38$all_ddgs)
 double_mutants_sel_AA_BB <- get_fixation_rates(double_mutants_sel_AA_BB, 'Both homodimers')
 double_mutants_sel_AB <- get_fixation_rates(double_mutants_sel_AB, 'Heterodimer')
 
-summary_final <- rbind(double_mutants_sel_AA_BB, double_mutants_sel_AB)
+summary_final <- rbind(double_mutants_sel_AA_BB, double_mutants_sel_AB) %>%
+  mutate(rejected_count = total_count - accepted_count)
 
-fig_S16 <- summary_final %>%
+# Get the z-scores for the p-values
+z_score_table <- summary_final %>%
+  select(quadrant, accepted_percentage_of_total, total_count, selection) %>%
+  unite(col = values, accepted_percentage_of_total, total_count, sep = ':') %>%
+  spread(key = selection, value = values) %>%
+  separate(col = `Both homodimers`, into = c('Acceptance_prob_HMs', 'Total_attempts_HMs'), sep = ':') %>%
+  separate(col = Heterodimer, into = c('Acceptance_prob_HETs', 'Total_attempts_HETs'), sep = ':') %>%
+  mutate(Acceptance_prob_HMs = as.numeric(Acceptance_prob_HMs)/ 100,
+         Acceptance_prob_HETs = as.numeric(Acceptance_prob_HETs)/ 100,
+         Total_attempts_HMs = as.numeric(Total_attempts_HMs),
+         Total_attempts_HETs = as.numeric(Total_attempts_HETs)
+         )
+
+# Get the binomial p-values
+p_vals <- get_pvals_binomial(p1 = z_score_table$Acceptance_prob_HMs, p2 = z_score_table$Acceptance_prob_HETs, 
+                             n1 = z_score_table$Total_attempts_HMs, n2 = z_score_table$Total_attempts_HETs)
+
+
+fig5_suppl3 <- summary_final %>%
   ggplot(aes(x = quadrant, y = accepted_percentage_of_total, fill = selection)) +
   geom_bar(stat = 'identity', position = 'dodge') +
   geom_errorbar(aes(ymin = min, ymax = max), 
@@ -946,10 +1035,16 @@ fig_S16 <- summary_final %>%
         axis.title.x = element_text(face = 'bold'), axis.title.y = element_text(face = 'bold'),
         axis.ticks.x = element_blank(), axis.ticks.y = element_blank(),
         axis.line = element_line(size = 0.5)) +
-  xlab("Effect on HMs") + ylab("Fixed mutations (%)") + labs(fill = 'Selection on')
-fig_S16
+  xlab("Effect on HMs") + ylab("Fixed mutations (%)") + labs(fill = 'Selection on') +
+  geom_segment(aes(x = 0.75, xend = 1.25, y = 7, yend = 7), size = 0.5) +
+  geom_segment(aes(x = 1.75, xend = 2.25, y = 12, yend = 12), size = 0.5) +
+  geom_segment(aes(x = 2.75, xend = 3.25, y = 22.5, yend = 22.5), size = 0.5) +
+  annotate(geom = 'text', label = p_vals[1], x = 1, y = 8) +
+  annotate(geom = 'text', label = p_vals[2], x = 2, y = 13) +
+  annotate(geom = 'text', label = p_vals[3], x = 3, y = 23.5)
+fig5_suppl3
 
-ggsave(filename = 'Figures/FigureS16.pdf',
-       device = cairo_pdf, width = 10, height = 7, plot = fig_S16, dpi = 500)
-ggsave(filename = 'Figures/FigureS16.png',
-       device = 'png', width = 10, height = 7, plot = fig_S16, dpi = 300)
+ggsave(filename = 'Figures/Figure 5-figure_supplement_3.pdf',
+       device = cairo_pdf, width = 10, height = 7, plot = fig5_suppl3, dpi = 500)
+ggsave(filename = 'Figures/Figure 5-figure_supplement_3.png',
+       device = 'png', width = 10, height = 7, plot = fig5_suppl3, dpi = 300)

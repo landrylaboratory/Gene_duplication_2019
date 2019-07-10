@@ -3,7 +3,7 @@
 #### I will use this script to derive      ####
 #### Jaccard indices for our pairs of      ####
 #### yeast paralogs. This script also      ####
-#### figure S7                             ####
+#### figure 3 - figure supplement 1        ####
 ###############################################
 
 # Load libraries
@@ -153,4 +153,5 @@ p2 <- all_duplicates_pfam_seq_ident %>%
 p2
 
 p_pfam_similarity <- plot_grid(p1, p2, nrow = 2, labels = c('A', 'B'))
-ggsave(plot = p_pfam_similarity, filename = 'Figure_S7.pdf', dpi = 500, width = 7, height = 14, device = cairo_pdf)
+ggsave(plot = p_pfam_similarity, filename = 'Figure 3-figure_supplement_1.pdf', dpi = 500, width = 7, height = 14, device = cairo_pdf)
+ggsave(plot = p_pfam_similarity, filename = 'Figure 3-figure_supplement_1.png', dpi = 300, width = 7, height = 14, device = 'png')

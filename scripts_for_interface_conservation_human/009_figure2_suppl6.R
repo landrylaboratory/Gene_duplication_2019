@@ -4,6 +4,8 @@
 #### of sequences within interfaces      ####
 #### based on structural data from the   ####
 #### PDB and motifs from BioGRID data.   ####
+#### It also produces Figure 2-figure    ####
+#### supplement 6.                       ####
 #############################################
 
 library(ggplot2)
@@ -22,9 +24,9 @@ pdb_data <- read_delim('Data/Paralogs_sequence_identities_dist_best_isoforms_201
 
 rohans_data_biogrid_intact <- read_delim('Data/dparalog_uniprotpdbids_gene_ids_biogrid_intact.tsv', delim = '\t')
 rohans_data_biogrid_intact %<>% select(`gene1 id`, `gene2 id`, `gene1 name`, `gene2 name`,
-                                      `heteromer or not (direct biogrid intact)`, 
-                                      `homomer or not (direct biogrid intact) gene1`, 
-                                      `homomer or not (direct biogrid intact) gene2`)
+                                      `heteromer or not (direct biogrid)`, 
+                                      `homomer or not (direct biogrid) gene1`, 
+                                      `homomer or not (direct biogrid) gene2`)
 
 colnames(rohans_data_biogrid_intact) <- c("Gene_1", "Gene_2", "Gene_1_name", "Gene_2_name", "HET", "HM_P1", "HM_P2")
 
@@ -184,5 +186,5 @@ p2
 
 p_int_conservation <- plot_grid(p1, NULL, p2, nrow = 3, rel_heights = c(1, 0.05, 1), labels = c('A', NULL, 'B'))
 
-ggsave(filename = 'FigureS6.pdf',
+ggsave(filename = 'Figure 2-figure_supplement_6.pdf',
        device = cairo_pdf, width = 7, height = 14, plot = p_int_conservation, dpi = 500)
