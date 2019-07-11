@@ -627,6 +627,9 @@ fig_2jky <- ggdraw() + draw_image('Data/4FGW_new.png')
 # Put them together and plot the trajectories (data loaded for figure 4)
 p_all <- full_dataset %>% ggplot(aes(x=Substitution,y=Binding_energy, group=interaction(Replicate, ComplexType), color=ComplexType)) + 
   facet_grid(Scenario ~ PDB, labeller = label_wrap_gen(width = 30)) +
+  geom_rect(aes(fill = PDB), colour = NA, xmin = -20,xmax = 230,
+            ymin = -70,ymax = 40, alpha = 0.1, show.legend = FALSE) +
+  scale_fill_manual(values = c('white', '#e6e6e6', 'white', 'white', 'white', 'white')) +
   geom_line(size=1, alpha=0.1) +
   scale_colour_manual(values = c("blue", "purple", "violet"),
                       name = "")+
@@ -647,8 +650,7 @@ p_all <- full_dataset %>% ggplot(aes(x=Substitution,y=Binding_energy, group=inte
         strip.text.x = element_text(face = 'bold'),
         strip.text.y = element_text(face = 'bold'),
         strip.background = element_rect(fill = 'white')
-  ) 
-
+  )
 
 legend <- get_legend(p_all + theme(legend.position = 'top', 
                                    legend.text=element_text(size = 25),
@@ -902,6 +904,9 @@ p_facet_double_mutants <- double_mutants_all %>%
   ) %>%
   ggplot(aes(x = exp_ddg_het, y = ddG)) +
   facet_grid(Scenario ~ PDB) +
+  geom_rect(aes(fill = PDB), colour = NA, xmin = -Inf,xmax = Inf,
+            ymin = -Inf,ymax = Inf, alpha = 0.1, show.legend = FALSE) +
+  scale_fill_manual(values = c('white', '#e6e6e6', 'white', 'white', 'white', 'white')) +
   geom_point(aes(colour = Verdict, alpha = Verdict, shape = out_of_bounds)) +
   scale_shape_manual(values = c(16, 17), guide = 'none') +
   scale_colour_manual(values = c("black", "red")) +

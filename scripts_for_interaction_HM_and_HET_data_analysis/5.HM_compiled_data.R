@@ -25,6 +25,73 @@ setwd("dir")
 genes <- read.table("data/genes-liste.csv", header = F)
 colnames(genes) <- 'orf'
 
+#annotate duplication statue
+WGD <- read.table("data/WGD.csv", header = F, sep=";")
+WGD$Duplication = "wgd"
+WGD$pair <- apply(cbind(as.character(WGD$V1), 
+                        as.character(WGD$V2)), 
+                  1, function(x) paste(sort(x), collapse="."))
+
+#remove WGD < 20% of sequence similarity qnd not in the same phylome
+wgd_filter <- read.table('data/removed_WGDs.txt', header=T)
+wgd_filter$pair<- apply(cbind(as.character(wgd_filter$P1), 
+                              as.character(wgd_filter$P2)), 
+                        1, function(x) paste(sort(x), collapse="."))
+wgd_filter$filter.WGD <-1
+wgd_filter <- select(wgd_filter, pair, filter.WGD)
+WGD <- left_join(WGD, wgd_filter, by='pair')
+WGD <- filter(WGD, is.na(filter.WGD))
+WGD <- select(WGD, V1, V2, Duplication, pair)
+
+SSD <- read.table("data/duplication_SDS_1paire.txt", header = F, sep="\t")
+SSD$Duplication = "ssd"
+
+SSD$pair <- apply(cbind(as.character(SSD$V1), 
+                        as.character(SSD$V2)), 
+                  1, function(x) paste(sort(x), collapse="."))
+
+#remove SSD < 20% of sequence similarity qnd not in the same phylome
+MSA_seq_ident_under_20 <- read.table("data/MSA_seq_ident_under_20.txt", sep="\t", header=T)
+MSA_seq_ident_under_20 <- filter(MSA_seq_ident_under_20, Duplication=="SSD")
+MSA_seq_ident_under_20$pair<- apply(cbind(as.character(MSA_seq_ident_under_20$P1), 
+                                          as.character(MSA_seq_ident_under_20$P2)), 
+                                    1, function(x) paste(sort(x), collapse="."))
+
+MSA_seq_ident_under_20 <- select(MSA_seq_ident_under_20, pair, Same_phylome)
+SSD <- left_join(SSD, MSA_seq_ident_under_20, by='pair')
+SSD <- filter(SSD, is.na(Same_phylome) | Same_phylome==1)
+
+SSD <- select(SSD, V1, V2, Duplication, pair)
+
+
+
+P1.WGD <- select(WGD, V1, Duplication) 
+colnames(P1.WGD) <- c("orf", "Duplication")
+P2.WGD <- select(WGD, V2, Duplication)
+colnames(P2.WGD) <- c("orf", "Duplication")
+
+P1.SSD <- select(SSD, V1, Duplication) 
+colnames(P1.SSD) <- c("orf", "Duplication")
+P2.SSD <- select(SSD, V2, Duplication)
+colnames(P2.SSD) <- c("orf", "Duplication")
+
+df.2 <- rbind(P1.WGD, P2.WGD, P1.SSD, P2.SSD)
+df.2 %<>% group_by(orf) %>% summarise(type_para = ifelse(n()==1, Duplication,
+                                                         ifelse(n()>1, "ssd_wgd", 'pb')))
+
+
+#add successive duplications
+all_dupli <- read.table("data/all_duplicated_genes.txt", header = F)
+#all_dupli$dupli <- 'unknown'
+
+P1.all_dupli <- select(all_dupli, V1) 
+colnames(P1.all_dupli) <- c("orf")
+P2.all_dupli <- select(all_dupli, V2)
+colnames(P2.all_dupli) <- c("orf")
+all_dupli2 <- unique(rbind(P1.all_dupli, P2.all_dupli))
+
+all_dupli2 <- full_join(all_dupli2, df.2, by="orf")
+all_dupli2 <- all_dupli2 %>% group_by(orf) %>% summarise(type_para= ifelse(is.na(type_para), "ssd-successiv", type_para))
 
 ###################################
 #####         BIOGRID         ##### 
@@ -99,77 +166,6 @@ colnames(Kim) <- c("orf", "HM.Kim")
 
 Pubmed.ID.bait.prey.HM.Kim <- full_join(Pubmed.ID.bait.prey.HM.2, Kim, by="orf")
 
-#annotate duplication statue
-WGD <- read.table("data/WGD.csv", header = F, sep=";")
-WGD$Duplication = "wgd"
-WGD$pair <- apply(cbind(as.character(WGD$V1), 
-                        as.character(WGD$V2)), 
-                  1, function(x) paste(sort(x), collapse="."))
-
-#remove WGD < 20% of sequence similarity qnd not in the same phylome
-wgd_filter <- read.table('data/removed_WGDs.txt', header=T)
-wgd_filter$pair<- apply(cbind(as.character(wgd_filter$P1), 
-                              as.character(wgd_filter$P2)), 
-                        1, function(x) paste(sort(x), collapse="."))
-wgd_filter$filter.WGD <-1
-wgd_filter <- select(wgd_filter, pair, filter.WGD)
-WGD <- left_join(WGD, wgd_filter, by='pair')
-WGD <- filter(WGD, is.na(filter.WGD))
-WGD <- select(WGD, V1, V2, Duplication, pair)
-
-SSD <- read.table("data/duplication_SDS_1paire.txt", header = F, sep="\t")
-SSD$Duplication = "ssd"
-
-SSD$pair <- apply(cbind(as.character(SSD$V1), 
-                             as.character(SSD$V2)), 
-                       1, function(x) paste(sort(x), collapse="."))
-
-#remove SSD < 20% of sequence similarity qnd not in the same phylome
-MSA_seq_ident_under_20 <- read.table("data/MSA_seq_ident_under_20.txt", sep="\t", header=T)
-MSA_seq_ident_under_20 <- filter(MSA_seq_ident_under_20, Duplication=="SSD")
-MSA_seq_ident_under_20$pair<- apply(cbind(as.character(MSA_seq_ident_under_20$P1), 
-                                          as.character(MSA_seq_ident_under_20$P2)), 
-                                    1, function(x) paste(sort(x), collapse="."))
-
-MSA_seq_ident_under_20 <- select(MSA_seq_ident_under_20, pair, Same_phylome)
-SSD <- left_join(SSD, MSA_seq_ident_under_20, by='pair')
-SSD <- filter(SSD, is.na(Same_phylome) | Same_phylome==1)
-
-SSD <- select(SSD, V1, V2, Duplication, pair)
-
-
-
-P1.WGD <- select(WGD, V1, Duplication) 
-colnames(P1.WGD) <- c("orf", "Duplication")
-P2.WGD <- select(WGD, V2, Duplication)
-colnames(P2.WGD) <- c("orf", "Duplication")
-
-P1.SSD <- select(SSD, V1, Duplication) 
-colnames(P1.SSD) <- c("orf", "Duplication")
-P2.SSD <- select(SSD, V2, Duplication)
-colnames(P2.SSD) <- c("orf", "Duplication")
-
-df.2 <- rbind(P1.WGD, P2.WGD, P1.SSD, P2.SSD)
-df.2 <- unique(df.2)
-df.2 %<>% group_by(orf) %>% summarise(type_para = ifelse(n()==1, Duplication,
-                                                         ifelse(n()>1, "ssd_wgd", 'pb')))
-
-df.2 <- unique(df.2)
-
-#add successive duplications
-all_dupli <- read.table("data/all_duplicated_genes.txt", header = F)
-all_dupli$dupli <- 'unknown'
-
-P1.all_dupli <- select(all_dupli, V1, dupli) 
-colnames(P1.all_dupli) <- c("orf", "dupli")
-P2.all_dupli <- select(all_dupli, V2, dupli)
-colnames(P2.all_dupli) <- c("orf", "dupli")
-all_dupli2 <- unique(rbind(P1.all_dupli, P2.all_dupli))
-
-all_dupli2 <- full_join(all_dupli2, df.2, by="orf")
-all_dupli2 <- all_dupli2 %>% group_by(orf) %>% summarise(type_para= ifelse(is.na(type_para), "ssd-successiv", type_para))
-
-
 Pubmed.ID.bait.prey.HM.Kim <- left_join(Pubmed.ID.bait.prey.HM.Kim, all_dupli2, by="orf")
 Pubmed.ID.bait.prey.HM.Kim$type_para[is.na(Pubmed.ID.bait.prey.HM.Kim$type_para)] <- "S"
 Pubmed.ID.bait.prey.HM.Kim <- Pubmed.ID.bait.prey.HM.Kim %>% group_by(orf) %>% 
@@ -202,19 +198,20 @@ dff.S.bg.Kim <- dff.S.bg.Kim %>% group_by(orf) %>% mutate(HM.bg.kim.S = ifelse(i
                                                                                ifelse(!is.na(HM.bg.kim) & !is.na(interaction) & (HM.bg.kim + interaction) > 0, 1, 0)))) 
 
 #adding PCA results
-summary_table <- read.table("without_low_qual/PCA_completed_by_Biog_Sty_2019_06_phylom.csv", sep="\t", header = T)
+summary_table <- read.table("PCA_completed_by_Biog_Sty_2019_06m.csv", sep="\t", header = T)
 HM1 <- select(summary_table, P1, HM1.PCA)
 HM2 <- select(summary_table, P2, HM2.PCA)
 colnames(HM1) <- c("orf", "HM.PCA")
 colnames(HM2) <- c("orf", "HM.PCA")
 HM.PCA <- rbind(HM1, HM2)
+HM.PCA <- filter(HM.PCA, is.na(HM.PCA))
 HM.PCA <- left_join(HM.PCA, all_dupli2, by='orf')
-HM.PCA$type_para[is.na(HM.PCA$type_para)] <- 'S'
+HM.PCA$type_para[HM.PCA$type_para=='YBR050C'] <- 'wgd'
 
 dff.S.bg.Kim.PCA <- full_join(dff.S.bg.Kim, HM.PCA, by=c("orf", "type_para"))
 dff.S.bg.Kim.PCA <- dff.S.bg.Kim.PCA %>% group_by(orf) %>% mutate(HM.bg.kim.S.PCA = ifelse(is.na(HM.bg.kim.S), HM.PCA,
                                                                                     ifelse(is.na(HM.PCA), HM.bg.kim.S,
                                                                                     ifelse(!is.na(HM.PCA) & !is.na(HM.bg.kim.S) & (HM.PCA + HM.bg.kim.S) > 0, 1, 0)))) 
 
-write.table(dff.S.bg.Kim.PCA, file = "without_low_qual/HM.data.csv", sep="\t",  quote=F, row.names=F)
+write.table(dff.S.bg.Kim.PCA, file = "TableS1.csv", sep="\t",  quote=F, row.names=F)
 

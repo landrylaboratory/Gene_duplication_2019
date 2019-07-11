@@ -1,0 +1,164 @@
+﻿Cell Name;Treatment;Fig 1C order;Cell cycle phase;reduced RP expressionin unstressed cells (arrowed cells, Fig 2C, FDR<0.01);Higher Hsf1 targets, Fig 6D (FDR < 0.053);Higher Rpn4 targets, Fig 6E (FDR < 0.05);Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Unstressed_1784042189_BY43;unstressed (before NaCl treatment);1;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY45;unstressed (before NaCl treatment);2;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY63;unstressed (before NaCl treatment);3;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY15;unstressed (before NaCl treatment);4;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY38;unstressed (before NaCl treatment);5;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY37;unstressed (before NaCl treatment);6;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY62;unstressed (before NaCl treatment);7;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY6;unstressed (before NaCl treatment);8;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY66;unstressed (before NaCl treatment);9;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY78;unstressed (before NaCl treatment);10;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY61;unstressed (before NaCl treatment);11;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY17;unstressed (before NaCl treatment);12;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY13;unstressed (before NaCl treatment);13;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY91;unstressed (before NaCl treatment);14;unclassified ;.;.;.;.
+BY4741_Unstressed_1784042189_BY88;unstressed (before NaCl treatment);15;G1-S;.;.;.;.
+BY4741_Unstressed_1784042189_BY31;unstressed (before NaCl treatment);16;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY5;unstressed (before NaCl treatment);17;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY65;unstressed (before NaCl treatment);18;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY79;unstressed (before NaCl treatment);19;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY8;unstressed (before NaCl treatment);20;G1-S;.;.;.;.
+BY4741_Unstressed_1784042189_BY39;unstressed (before NaCl treatment);21;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY80;unstressed (before NaCl treatment);22;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY74;unstressed (before NaCl treatment);23;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY20;unstressed (before NaCl treatment);24;G1-S;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY9;unstressed (before NaCl treatment);25;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY86;unstressed (before NaCl treatment);26;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY29;unstressed (before NaCl treatment);27;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY51;unstressed (before NaCl treatment);28;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY54;unstressed (before NaCl treatment);29;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY21;unstressed (before NaCl treatment);30;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY71;unstressed (before NaCl treatment);31;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY24;unstressed (before NaCl treatment);32;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY2;unstressed (before NaCl treatment);33;G1-S;.;.;.;.
+BY4741_Unstressed_1784042189_BY35;unstressed (before NaCl treatment);34;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY77;unstressed (before NaCl treatment);35;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY19;unstressed (before NaCl treatment);36;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY73;unstressed (before NaCl treatment);37;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY12;unstressed (before NaCl treatment);38;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY68;unstressed (before NaCl treatment);39;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY22;unstressed (before NaCl treatment);40;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY28;unstressed (before NaCl treatment);41;G1-S;.;.;.;.
+BY4741_Unstressed_1784042189_BY92;unstressed (before NaCl treatment);42;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY87;unstressed (before NaCl treatment);43;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY56;unstressed (before NaCl treatment);44;G1-S;.;.;.;.
+BY4741_Unstressed_1784042189_BY57;unstressed (before NaCl treatment);45;unclassified;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY81;unstressed (before NaCl treatment);46;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY10;unstressed (before NaCl treatment);47;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY90;unstressed (before NaCl treatment);48;G1-S;.;.;.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Unstressed_1784042189_BY34;unstressed (before NaCl treatment);49;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY85;unstressed (before NaCl treatment);50;G1 DNA replication;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY82;unstressed (before NaCl treatment);51;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY11;unstressed (before NaCl treatment);52;G1 DNA replication;.;.;.;.
+BY4741_Unstressed_1784042189_BY76;unstressed (before NaCl treatment);53;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY72;unstressed (before NaCl treatment);54;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY18;unstressed (before NaCl treatment);55;G1;.;.;.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Unstressed_1784042189_BY67;unstressed (before NaCl treatment);56;S;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY23;unstressed (before NaCl treatment);57;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY49;unstressed (before NaCl treatment);58;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY89;unstressed (before NaCl treatment);59;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY16;unstressed (before NaCl treatment);60;S;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY25;unstressed (before NaCl treatment);61;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY1;unstressed (before NaCl treatment);62;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY83;unstressed (before NaCl treatment);63;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY64;unstressed (before NaCl treatment);64;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY14;unstressed (before NaCl treatment);65;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY26;unstressed (before NaCl treatment);66;S;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY75;unstressed (before NaCl treatment);67;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY53;unstressed (before NaCl treatment);68;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY32;unstressed (before NaCl treatment);69;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY60;unstressed (before NaCl treatment);70;S;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY55;unstressed (before NaCl treatment);71;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY70;unstressed (before NaCl treatment);72;M/G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY58;unstressed (before NaCl treatment);73;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY84;unstressed (before NaCl treatment);74;unclassified;.;.;.;.
+BY4741_Unstressed_1784042189_BY50;unstressed (before NaCl treatment);75;G1;.;.;.;.
+BY4741_Unstressed_1784042189_BY94;unstressed (before NaCl treatment);76;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY3;unstressed (before NaCl treatment);77;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY52;unstressed (before NaCl treatment);78;G1 entry;.;.;.;.
+BY4741_Unstressed_1784042189_BY4;unstressed (before NaCl treatment);79;S;.;.;.;.
+BY4741_Unstressed_1784042189_BY93;unstressed (before NaCl treatment);80;G1-S;.;.;.;.
+BY4741_Unstressed_1784042189_BY33;unstressed (before NaCl treatment);81;unclassified;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY7;unstressed (before NaCl treatment);82;M/G1;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Unstressed_1784042189_BY59;unstressed (before NaCl treatment);83;S;reduced RP in unstressed cells (arrowed cells, Fig 2C);.;.;.
+BY4741_Stressed_1784042160_C50_BY5;30 min post 0.7M NaCl treatment ('stressed');85;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY78;30 min post 0.7M NaCl treatment ('stressed');86;S;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY29;30 min post 0.7M NaCl treatment ('stressed');87;G1-S;.;Higher expression of Hsf1 targets (FDR < 0.053, compared only to stressed cells);.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY22;30 min post 0.7M NaCl treatment ('stressed');88;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY79;30 min post 0.7M NaCl treatment ('stressed');89;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY89;30 min post 0.7M NaCl treatment ('stressed');90;unclassified ;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY86;30 min post 0.7M NaCl treatment ('stressed');91;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY82;30 min post 0.7M NaCl treatment ('stressed');92;S;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY34;30 min post 0.7M NaCl treatment ('stressed');93;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY77;30 min post 0.7M NaCl treatment ('stressed');94;G1 DNA replication;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY55;30 min post 0.7M NaCl treatment ('stressed');95;G1 DNA replication;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY44;30 min post 0.7M NaCl treatment ('stressed');96;S;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY49;30 min post 0.7M NaCl treatment ('stressed');97;G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY10;30 min post 0.7M NaCl treatment ('stressed');98;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY87;30 min post 0.7M NaCl treatment ('stressed');99;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY8;30 min post 0.7M NaCl treatment ('stressed');100;G1 DNA replication;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);.
+BY4741_Stressed_1784042160_C50_BY14;30 min post 0.7M NaCl treatment ('stressed');101;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY75;30 min post 0.7M NaCl treatment ('stressed');102;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY13;30 min post 0.7M NaCl treatment ('stressed');103;G1 DNA replication;.;Higher expression of Hsf1 targets (FDR < 0.053, compared only to stressed cells);.;.
+BY4741_Stressed_1784042160_C50_BY26;30 min post 0.7M NaCl treatment ('stressed');104;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY71;30 min post 0.7M NaCl treatment ('stressed');105;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY42;30 min post 0.7M NaCl treatment ('stressed');106;S;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY11;30 min post 0.7M NaCl treatment ('stressed');107;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY52;30 min post 0.7M NaCl treatment ('stressed');108;M/G1;.;Higher expression of Hsf1 targets (FDR < 0.053, compared only to stressed cells);.;.
+BY4741_Stressed_1784042160_C50_BY9;30 min post 0.7M NaCl treatment ('stressed');109;unclassified ;.;.;.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY18;30 min post 0.7M NaCl treatment ('stressed');110;G1 DNA replication;.;.;.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY35;30 min post 0.7M NaCl treatment ('stressed');111;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY50;30 min post 0.7M NaCl treatment ('stressed');112;G1 entry;.;.;.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY63;30 min post 0.7M NaCl treatment ('stressed');113;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY2;30 min post 0.7M NaCl treatment ('stressed');114;unclassified;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);.
+BY4741_Stressed_1784042160_C50_BY70;30 min post 0.7M NaCl treatment ('stressed');115;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY1;30 min post 0.7M NaCl treatment ('stressed');116;G1 DNA replication;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY19;30 min post 0.7M NaCl treatment ('stressed');117;G1 DNA replication;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY57;30 min post 0.7M NaCl treatment ('stressed');118;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY88;30 min post 0.7M NaCl treatment ('stressed');119;S;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY30;30 min post 0.7M NaCl treatment ('stressed');120;unclassified;.;.;.;Altered Glycolysis Expression (FDR < 0.05)
+BY4741_Stressed_1784042160_C50_BY84;30 min post 0.7M NaCl treatment ('stressed');121;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY31;30 min post 0.7M NaCl treatment ('stressed');122;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY59;30 min post 0.7M NaCl treatment ('stressed');123;G1 DNA replication;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY7;30 min post 0.7M NaCl treatment ('stressed');124;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY54;30 min post 0.7M NaCl treatment ('stressed');125;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY36;30 min post 0.7M NaCl treatment ('stressed');126;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY27;30 min post 0.7M NaCl treatment ('stressed');127;unclassified;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);.
+BY4741_Stressed_1784042160_C50_BY62;30 min post 0.7M NaCl treatment ('stressed');128;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY53;30 min post 0.7M NaCl treatment ('stressed');129;G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY37;30 min post 0.7M NaCl treatment ('stressed');130;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY3;30 min post 0.7M NaCl treatment ('stressed');131;G1;.;Higher expression of Hsf1 targets (FDR < 0.053, compared only to stressed cells);.;.
+BY4741_Stressed_1784042160_C50_BY51;30 min post 0.7M NaCl treatment ('stressed');132;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY85;30 min post 0.7M NaCl treatment ('stressed');133;unclassified ;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY69;30 min post 0.7M NaCl treatment ('stressed');134;unclassified;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);.
+BY4741_Stressed_1784042160_C50_BY72;30 min post 0.7M NaCl treatment ('stressed');135;G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY80;30 min post 0.7M NaCl treatment ('stressed');136;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY38;30 min post 0.7M NaCl treatment ('stressed');137;S;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY66;30 min post 0.7M NaCl treatment ('stressed');138;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY12;30 min post 0.7M NaCl treatment ('stressed');139;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY56;30 min post 0.7M NaCl treatment ('stressed');140;unclassified;.;Higher expression of Hsf1 targets (FDR < 0.053, compared only to stressed cells);.;.
+BY4741_Stressed_1784042160_C50_BY33;30 min post 0.7M NaCl treatment ('stressed');141;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY17;30 min post 0.7M NaCl treatment ('stressed');142;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY81;30 min post 0.7M NaCl treatment ('stressed');143;unclassified ;.;Higher expression of Hsf1 targets (FDR < 0.053, compared only to stressed cells);.;.
+BY4741_Stressed_1784042160_C50_BY58;30 min post 0.7M NaCl treatment ('stressed');144;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY64;30 min post 0.7M NaCl treatment ('stressed');145;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY4;30 min post 0.7M NaCl treatment ('stressed');146;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY15;30 min post 0.7M NaCl treatment ('stressed');147;G1 DNA replication;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY16;30 min post 0.7M NaCl treatment ('stressed');148;G1 entry;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);.
+BY4741_Stressed_1784042160_C50_BY6;30 min post 0.7M NaCl treatment ('stressed');149;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY32;30 min post 0.7M NaCl treatment ('stressed');150;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY40;30 min post 0.7M NaCl treatment ('stressed');151;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY76;30 min post 0.7M NaCl treatment ('stressed');152;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY25;30 min post 0.7M NaCl treatment ('stressed');153;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY61;30 min post 0.7M NaCl treatment ('stressed');154;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY60;30 min post 0.7M NaCl treatment ('stressed');155;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY83;30 min post 0.7M NaCl treatment ('stressed');156;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY24;30 min post 0.7M NaCl treatment ('stressed');157;G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY23;30 min post 0.7M NaCl treatment ('stressed');158;S;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY39;30 min post 0.7M NaCl treatment ('stressed');159;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY65;30 min post 0.7M NaCl treatment ('stressed');160;G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY28;30 min post 0.7M NaCl treatment ('stressed');161;M/G1;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY21;30 min post 0.7M NaCl treatment ('stressed');162;unclassified;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY20;30 min post 0.7M NaCl treatment ('stressed');163;G1 entry;.;.;.;.
+BY4741_Stressed_1784042160_C50_BY67;30 min post 0.7M NaCl treatment ('stressed');164;M/G1;.;.;Higher expression of Rpn4 targets (FDR < 0.05, compared only to stressed cells);.

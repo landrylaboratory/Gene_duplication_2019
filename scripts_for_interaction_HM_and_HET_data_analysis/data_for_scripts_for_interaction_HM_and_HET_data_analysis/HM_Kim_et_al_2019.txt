@@ -1,0 +1,188 @@
+Gene	ORF	Known	Novel	GFP localizationa	Overlap of BiFC with GFP	BiFC intensity
+AAT2	YLR027C	_		cytoplasm	same	1 027 526 
+ABP140	YOR239W	_		actin*	same	2 296 166 
+ACO2	YJL200C	_		mitochondrion	same	1 793 338 
+ACS1	YAL054C	_		cytoplasm, nucleus	same	2 278 109 
+ALD6	YPL061W	_		cytoplasm, nucleus	same	20 621 325 
+ANY1	YMR010W	_		punctate, early Golgi	same	2 854 989 
+APL4	YPR029C	_		punctate	same	1 911 197 
+APL6	YGR261C	_		punctate, Golgi, early Golgi	same	1 746 203 
+ATP10	YLR393W	_		mitochondrion	same	1 621 670 
+BCP1	YDR361C	_		cytoplasm, nucleus	same	1 296 963 
+CPR1	YDR155C	_		cytoplasm, nucleus	same	8 679 628 
+CYS4	YGR155W	_		cytoplasm	partial	10 206 117 
+DAD3	YBR233W-A	_		spindle pole	same	1 663 404 
+DCP2	YNL118C	_		punctate	same	2 001 703 
+DID2	YKR035W-A	_		endosome	same	897 249 
+DPP1	YDR284C	_		vacuolar membrane	same	1 949 846 
+EDE1	YBL047C	_		punctate	same	3 628 596 
+EMP24	YGL200C	_		punctate	same	1 700 918 
+ERP1	YAR002C-A	_		vacuolar membrane	same	1 317 516 
+ERV25	YML012W	_		ER	same	1 950 817 
+FBP1	YLR377C	_		NAb	punctate foci	2 290 528 
+GCD1	YOR260W	_		cytoplasm	partial	1 525 074 
+GCD11	YER025W	_		cytoplasm	same	2 165 329 
+GCD6	YDR211W	_		cytoplasm	partial	1 963 410 
+GIN4	YDR507C	_		bud neck, cytoplasm, bud	same	1 484 951 
+GLE1	YDL207W	_		nuclear periphery	same	1 944 388 
+GLK1	YCL040W	_		cytoplasm, punctate	same	1 894 332 
+GLT1	YDL171C	_		ambiguous	same	3 073 160 
+HOM3	YER052C	_		cytoplasm	same	2 266 853 
+HSP42	YDR171W	_		cytoplasm	same	1 531 958 
+ILV1	YER086W	_		mitochondrion	same	1 891 207 
+KES1	YPL145C	_		cytoplasm	partial	1 688 042 
+KGD1	YIL125W	_		mitochondrion	same	2 581 085 
+LOC1	YFR001W	_		nucleolus, nucleus	same	1 532 780 
+LSB3	YFR024C-A	_		bud neck, cytoplasm, mitochondrion, cell periphery	same	1 868 230 
+LSM1	YJL124C	_		cytoplasm	partial	683 210 
+MCM1	YMR043W	_		nucleus	same	2 213 965 
+MDH2	YOL126C	_		peroxisome	same	1 003 452 
+MDJ1	YFL016C	_		mitochondrion	same	1 058 018 
+MDV1	YJL112W	_		mitochondrion	same	1 809 308 
+MEH1	YKR007W	_		vacuolar membrane	same	742 044 
+MST27	YGL051W	_		NA	ambiguous	1 785 263 
+MYO2	YOR326W	_		bud neck, cytoplasm, cell periphery, bud	same	2 207 040 
+MYO4	YAL029C	_		bud neck, cytoplasm, cell periphery, bud	same	1 409 354 
+MYO5	YMR109W	_		actin	same	2 177 699 
+NAB2	YGL122C	_		nucleus	partial	1 983 494 
+NHP10	YDL002C	_		nucleus	same	1 645 573 
+NOC3	YLR002C	_		nucleolus, nucleus	same	1 747 119 
+NOP15	YNL110C	_		nucleolus, nucleus	same	2 090 763 
+OLE1	YGL055W	_		ER	same	2 112 716 
+PEX6	YNL329C	_		peroxisome	same	1 427 470 
+PIM1	YBL022C	_		mitochondrion	same	1 910 524 
+POM33	YLL023C	_		ER	same	740 012 
+PRO3	YER023W	_		cytoplasm	same	3 456 978 
+RAD51	YER095W	_		cytoplasm, nucleus	same	4 489 774 
+RBD2	YPL246C	_		Golgi, early Golgi	same	2 046 156 
+RGD2	YFL047W	_		bud neck, cytoplasm, cell periphery	same	2 118 413 
+RRP42	YDL111C	_		cytoplasm, nucleolus, nucleus	same	1 670 322 
+RTN2	YDL204W	_		ER	same	2 595 707 
+RVS167	YDR388W	_		actin	same	1 268 702 
+SCO2	YBR024W	_		NA	ambiguous	1 626 924 
+SEC3	YER008C	_		bud neck, cell periphery, bud	same	1 895 407 
+SEY1	YOR165W	_		punctate	same	2 367 047 
+SGF29	YCL010C	_		nucleus	same	1 677 009 
+SLM4	YBR077C	_		vacuolar membrane	same	865 243 
+SNF7	YLR025W	_		endosome	same	2 104 653 
+SPC24	YMR117C	_		spindle pole	same	1 657 706 
+SRP1	YNL189W	_		cytoplasm, nuclear periphery	partial	2 404 673 
+TGL3	YMR313C	_		punctate, lipid particle	same	1 940 653 
+TIM11	YDR322C-A	_		mitochondrion	same	2 270 796 
+TRM1	YDR120C	_		nuclear periphery, nucleus	same	2 251 588 
+TRS33	YOR115C	_		punctate	same	2 040 507 
+TSA1	YML028W	_		cytoplasm, punctate	same	9 461 788 
+TVP15	YDR100W	_		early Golgi	same	1 509 598 
+URA7	YBL039C	_		cytoplasm	partial	3 255 155 
+UTP8	YGR128C	_		nucleolus	same	2 165 005 
+VMA21	YGR105W	_		vacuole	same	1 686 192 
+VPS35	YJL154C	_		vacuolar membrane, endosome	same	1 430 959 
+VPS5	YOR069W	_		endosome	same	1 764 528 
+VPS60	YDR486C	_		vacuolar membrane	same	2 105 548 
+WTM1	YOR230W	_		nucleus, anti-nucleolar nucleus	same	3 071 872 
+XRN1	YGL173C	_		cytoplasm	partial	3 362 175 
+ADK2	YER170W		_	mitochondrion	same	1 796 657 
+AIM17	YHL021C		_	mitochondrion	same	631 011 
+AIM24	YJR080C		_	mitochondrion	same	2 537 457 
+AIP1	YMR092C		_	actin	same	630 661 
+ALB1	YJL122W		_	nucleus	same	1 293 149 
+ALT1	YLR089C		_	NA	mitochondrion	1 559 191 
+ANT1	YPR128C		_	peroxisome	same	1 850 982 
+APL2	YKL135C		_	late Golgi	same	1 654 257 
+APL5	YPL195W		_	early Golgi	same	1 805 319 
+ARC35	YNR035C		_	actin	same	1 816 870 
+ARO4	YBR249C		_	cytoplasm, nucleus	partial	1 290 798 
+ATG8	YBL078C		_	NA	punctate foci	336 084 
+ATP19	YOL077W-A		_	mitochondrion	same	2 067 765 
+ATP3	YBR039W		_	mitochondrion	same	1 928 097 
+BSC2	YDR275W		_	lipid particle	same	1 887 016 
+BUR6	YER159C		_	nucleus	same	1 991 056 
+BXI1	YNL305C		_	vacuole	same	1 844 098 
+CAF120	YNL278W		_	bud neck, cytoplasm, bud	same	1 294 282 
+CBP3	YPL215W		_	mitochondrion	same	1 787 924 
+COQ3	YOL096C		_	mitochondria	same	1 804 712 
+COX7	YMR256C		_	mitochondrion	same	2 095 145 
+CYT1	YOR065W		_	mitochondrion	same	1 796 591 
+DDR2	YOL052C-A		_	cytoplasm, vacuole	same	1 674 657 
+DPM1	YPR183W		_	ER	same	2 178 291 
+ELF1	YKL160W		_	nucleus	same	1 701 835 
+ELO2	YCR034W		_	ER	same	1 787 854 
+ENT5	YDR153C		_	late Golgi	same	2 116 847 
+FAA1	YOR317W		_	ER	same	3 396 713 
+FCY2	YER056C		_	vacuole	same	1 818 077 
+FSF1	YOR271C		_	mitochondrion	same	1 503 810 
+GCV2	YMR189W		_	mitochondrion	same	2 428 776 
+GDH2	YDL215C		_	cytoplasm	same	2 898 555 
+GEA1	YJR031C		_	Golgi	same	831 203 
+GEM1	YAL048C		_	NA	ambiguous	1 599 355 
+GLY1	YEL046C		_	cytoplasm, nucleus	same	8 155 149 
+GVP36	YIL041W		_	Golgi**	same	4 743 695 
+ILV6	YCL009C		_	mitochondrion	same	3 003 939 
+INP53	YOR109W		_	punctate	same	1 636 176 
+IVY1	YDR229W		_	vacuolar membrane	same	1 022 127 
+JIP5	YPR169W		_	nucleolus, nucleus	same	1 408 779 
+KAP123	YER110C		_	cytoplasm, nucleus	partial	2 789 939 
+LAM6	YLR072W		_	mitochondrion, punctate	same	1 646 567 
+LPD1	YFL018C		_	mitochondrion	same	3 304 539 
+MAP1	YLR244C		_	cytoplasm, nucleus	partial	582 213 
+MCX1	YBR227C		_	mitochondrion	partial	1 681 900 
+MDH1	YKL085W		_	mitochondrion	same	8 101 062 
+MDM12	YOL009C		_	mitochondrion	same	1 314 100 
+MET10	YFR030W		_	cytoplasm	same	1 543 586 
+MET14	YKL001C		_	cytoplasm	same	671 142 
+MIC19	YFR011C		_	cytoplasm, mitochondrion	same	1 793 051 
+MRPL19	YNL185C		_	mitochondrion	same	1 614 745 
+MSB3	YNL293W		_	ambiguous	same	1 596 779 
+MSS116	YDR194C		_	mitochondrion	same	2 421 457 
+NCL1	YBL024W		_	nucleus	same	1 610 624 
+NCW1	YMR122W-A		_	ER, cytoplasm	partial	1 949 357 
+NUP60	YAR002W		_	nuclear periphery	same	3 094 987 
+PFD1	YJL179W		_	cytoplasm	same	1 654 813 
+PGA3	YML125C		_	ER	same	1 735 280 
+PHB1	YGR132C		_	mitochondrion	same	1 558 693 
+PHO84	YML123C		_	ER	same	1 847 551 
+PLN1	YKR046C		_	lipid particle	same	1 968 393 
+PMC1	YGL006W		_	vacuolar membrane	same	1 935 685 
+PPS1	YBR276C		_	NA	ambiguous	1 650 313 
+PSE1	YMR308C		_	cytoplasm, nucleus	partial	1 366 222 
+PSG1	YKL077W		_	vacuole	same	2 330 867 
+QCR10	YHR001W-A		_	mitochondrion	same	1 616 425 
+RAI1	YGL246C		_	nucleus	same	1 666 970 
+RDL1	YOR285W		_	ER	same	718 186 
+RGD1	YBR260C		_	bud neck, cytoplasm, bud	same	1 525 989 
+RHO5	YNL180C		_	 endomembrane system***	same	1 931 498 
+ROM2	YLR371W		_	bud neck, cytoplasm, bud	same	1 601 616 
+RPL7A	YGL076C		_	cytoplasm	same	15 169 517 
+RPS18B	YML026C		_	cytoplasm	same	2 221 056 
+RPS24B	YIL069C		_	cytoplasm	same	2 195 984 
+RRP17	YDR412W		_	nucleolus, nucleus	same	1 951 178 
+RRT8	YOL048C		_	lipid particle	same	1 187 125 
+RVS161	YCR009C		_	cytoplasm, actin	same	1 907 368 
+SDH4	YDR178W		_	mitochondrion	same	1 745 969 
+SET2	YJL168C		_	nucleus	same	2 548 343 
+SHM2	YLR058C		_	cytoplasm, nucleus	same	12 905 422 
+SLC1	YDL052C		_	ER	partial	2 117 340 
+SMX2	YFL017W-A		_	nucleus	same	1 604 259 
+SNC2	YOR327C		_	vacuole	same	1 876 343 
+SOL2	YCR073W-A		_	cytoplasm	partial	3 293 119 
+SSP120	YLR250W		_	punctate, Golgi, early Golgi	same	1 692 938 
+TIP1	YBR067C		_	ER	same	1 627 459 
+TRX2	YGR209C		_	cytoplasm, nucleus	same	3 727 572 
+UTP30	YKR060W		_	nucleolus, nucleus	partial	1 715 056 
+UTP5	YDR398W		_	nucleolus	same	1 723 762 
+UTR2	YEL040W		_	ER	same	3 647 821 
+VID27	YNL212W		_	cytoplasm	partial	1 863 347 
+VPS16	YPL045W		_	vacuolar membrane	same	2 059 389 
+YAH1	YPL252C		_	mitochondrion	same	1 618 816 
+YAR044W	YAR044W		_	punctate	same	502 587 
+YER156C	YER156C		_	cytoplasm, nucleus	same	3 033 241 
+YHR127W	YHR127W		_	nucleus	same	1 913 395 
+YLL067C	YLL067C		_	NA	ambiguous	1 263 120 
+YLR257W	YLR257W		_	cytoplasm	partial	3 097 750 
+YML009C-A	YML009C-A		_	NA	ambiguous	1 604 097 
+YPL162C	YPL162C		_	vacuolar membrane	same	1 717 985 
+YPR090W	YPR090W		_	late Golgi	same	1 650 711 
+YPR097W	YPR097W		_	ambiguous	partial	1 619 596 
+YPQ1	YOL092W		_	vacuolar membrane	same	1 482 482 
+ZPR1	YGR211W		_	cytoplasm, nucleus	same	1 326 059 
+MDS3c	YGL197W					140 997 

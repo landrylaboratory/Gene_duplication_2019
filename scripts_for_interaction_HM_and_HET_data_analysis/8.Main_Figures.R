@@ -24,18 +24,18 @@ library(ggpubr)
 cl <- colors()[]
 
 
-summary_table <- read.delim('without_low_qual/TableS1.csv', header=T, sep="\t")
+summary_table <- read.delim('TableS3.csv', header=T, sep="\t")
 
 ######## Figure2 #########
 
 # Figure2A
 # This figure compares percentage of homomeric proteins among singleton, SSDs, WGDs and double duplication
-dff.S.bg.Kim.PCA <- read.table("without_low_qual/HM.data.csv", sep="\t", header=T)
+dff.S.bg.Kim.PCA <- read.table("TableS1.csv", sep="\t", header=T)
 dff.S.bg.Kim.PCA$pair <- apply(cbind(as.character(dff.S.bg.Kim.PCA$orf), 
                              as.character(dff.S.bg.Kim.PCA$prey)), 
                        1, function(x) paste(sort(x), collapse="."))
 dff.S.bg.Kim.PCA <- left_join(dff.S.bg.Kim.PCA, wgd_filter, by='pair')
-dff.S.bg.Kim.PCA <- filter(dff.S.bg.Kim.PCA, is.na(wgd.filter))
+
 #keeping successive SSDs
 dff.S.bg.Kim.PCA$type_para[dff.S.bg.Kim.PCA$type_para== "ssd-successiv"] <- "ssd"
 ct_hom <- table(droplevels(dff.S.bg.Kim.PCA)$type_para, dff.S.bg.Kim.PCA$HM.bg.kim.S.PCA)
@@ -58,10 +58,10 @@ fisher.test(dff.S.bg.Kim.PCA$HM.bg.kim.S.PCA[dff.S.bg.Kim.PCA$type_para=="S" | d
 #p-value < 2.2e-16
 fisher.test(dff.S.bg.Kim.PCA$HM.bg.kim.S.PCA[dff.S.bg.Kim.PCA$type_para=="S" | dff.S.bg.Kim.PCA$type_para=="wgd"], 
             as.factor(dff.S.bg.Kim.PCA$type_para[dff.S.bg.Kim.PCA$type_para=="S" | dff.S.bg.Kim.PCA$type_para=="wgd"]), workspace=2e8)
-#p-value =  1.795e-05
+#p-value =   1.618e-05
 fisher.test(dff.S.bg.Kim.PCA$HM.bg.kim.S.PCA[dff.S.bg.Kim.PCA$type_para=="S" | dff.S.bg.Kim.PCA$type_para=="ssd_wgd"], 
             as.factor(dff.S.bg.Kim.PCA$type_para[dff.S.bg.Kim.PCA$type_para=="S" | dff.S.bg.Kim.PCA$type_para=="ssd_wgd"]), workspace=2e8)
-#p-value = 2.43e-09
+#p-value = 0.001695
 
 tot <- sum(dbg$count)
 dbg <- dbg %>% separate(class, c("HMstatue", "dupli"), "HM ")
@@ -87,8 +87,8 @@ Figure2A <-
   scale_fill_manual(guide=FALSE,values = c(cl[285],cl[16],cl[144],cl[129],cl[310])) +
   geom_signif(xmin=c(2, 2, 2),
               xmax=c(3, 4, 5), 
-              y_position=c(50, 54, 58), 
-              annotation=c("<2.0e-16","1.795e-05","2.43e-09"), textsize=4) +
+              y_position=c(42, 46, 50), 
+              annotation=c("<2.0e-16","1.6e-05","1.7e-03"), textsize=4) +
   ylab("Percentage of homomers (%)") + xlab("Groups of genes")+
   theme(panel.background = element_rect(fill = "white", colour = "grey50"))+
   theme(axis.text.x= element_text(size=12), axis.text.y= element_text(size=12), 
@@ -229,7 +229,7 @@ wilcox.test(WGD$phylomDB.similarity[WGD$motif.categories=='HM'] , WGD$phylomDB.s
 Figure2_top <- plot_grid(Figure2A, Figure2BC, Figure2D, labels = c("A", "", "D"), ncol=3)
 Figure2_bottom <- plot_grid(Figure2E, Figure2F, labels=c('E', 'F'), ncol=2)
 
-ggsave(file="without_low_qual/Figure2.pdf", width=14, height=14, dpi=500)
+ggsave(file="Figure2.pdf", width=14, height=14, dpi=500)
 plot_grid(Figure2_top, Figure2_bottom, ncol=1)
 dev.off()
 
@@ -276,7 +276,7 @@ funct_resum %<>% mutate(p.value.range = ifelse(p.value > 0.05, 'NS',
                                         ifelse(p.value < 0.01 & p.value > 0.001, '< 0.01',
                                         ifelse(p.value < 0.001, '< 0.001', 'pb')))))
 
-ggsave(file="without_low_qual/Figure3.pdf", width=10, height=5, dpi=500)
+ggsave(file="Figure3.pdf", width=10, height=5, dpi=500)
 ggplot(funct_resum, 
        aes(motif.categories, mean.similarity, group = GO, color = as.factor(GO))) +
   geom_point(size=4) +
@@ -296,7 +296,7 @@ dev.off()
 #The correlation coefficients between the expression profile of paralog pairs 
 #are compared among the different interaction motifs for SSDs and WGDs
 Figure6A <-
-  ggboxplot(filter(summary_table, motif.categories=='HM' | motif.categories=='HM&HET'), x="motif.categories", y="exp.correl.coeff.RNAseq", 
+  ggboxplot(filter(summary_table, motif.categories=='HM' | motif.categories=='HM&HET'), x="motif.categories", y="exp.correl.coeff.microarray", 
             fill="Duplication", facet.by = "Duplication", panel.labs.font = list(size = 11))+ 
   scale_fill_manual(values = c(cl[144],cl[129])) +
   stat_compare_means(comparisons = c("HM", "HM&HET"), group.by = "Duplication", method = "t.test") +
@@ -307,12 +307,12 @@ Figure6A <-
         plot.title = element_text(size=15, hjust = 0.5), legend.position = "none")
 
 SSD <- filter(summary_table, Duplication=='SSD')
-t.test(SSD$exp.correl.coeff.RNAseq[SSD$motif.categories=='HM'], 
-            SSD$exp.correl.coeff.RNAseq[SSD$motif.categories=='HM&HET']) # 0.0159
+t.test(SSD$exp.correl.coeff.microarray[SSD$motif.categories=='HM'], 
+            SSD$exp.correl.coeff.microarray[SSD$motif.categories=='HM&HET']) # 0.0159
 
 WGD <- filter(summary_table, Duplication=='WGD')
-t.test(WGD$exp.correl.coeff.RNAseq[WGD$motif.categories=='HM'], 
-            WGD$exp.correl.coeff.RNAseq[WGD$motif.categories=='HM&HET']) # 0.860
+t.test(WGD$exp.correl.coeff.microarray[WGD$motif.categories=='HM'], 
+            WGD$exp.correl.coeff.microarray[WGD$motif.categories=='HM&HET']) # 0.860
 
 
 #Figure6B
@@ -368,14 +368,14 @@ ggplot(funct_resum,
 #are compared between HM and HM&HET for each SSDs and WGDs
 
 coexp_pi_het <- summary_table %>% filter(motif.categories=="HM" | motif.categories=="HM&HET") %>%
-  filter(!is.na(exp.correl.coeff.RNAseq)) %>%
+  filter(!is.na(exp.correl.coeff.microarray)) %>%
   filter(!is.na(phylomDB.similarity)) %>%
   arrange(phylomDB.similarity) %>%
   mutate(window_pi = cut_interval(phylomDB.similarity,6)) %>%
   group_by(window_pi, motif.categories, Duplication) %>%
-  summarise(mean.coexp = mean(exp.correl.coeff.RNAseq, na.rm=T),
-            median.coexp = median(exp.correl.coeff.RNAseq, na.rm=T),
-            ci = 1.96*sd(exp.correl.coeff.RNAseq, na.rm=T)/sqrt(n()),
+  summarise(mean.coexp = mean(exp.correl.coeff.microarray, na.rm=T),
+            median.coexp = median(exp.correl.coeff.microarray, na.rm=T),
+            ci = 1.96*sd(exp.correl.coeff.microarray, na.rm=T)/sqrt(n()),
             mean_interval = mean(phylomDB.similarity),
             npoints=n())
 
@@ -400,6 +400,6 @@ Figure6C <-
 Figure6AC <- plot_grid(Figure6A, Figure6C, labels = c("A", 'B'), nrow=1, ncol = 2)
 
 
-ggsave(file="without_low_qual/Figure6.pdf", width=10, height=10, dpi=500)
+ggsave(file="Figure6.pdf", width=10, height=10, dpi=500)
 plot_grid(Figure6AC, Figure6B, labels = c("", "C"), nrow=2, ncol = 1)
 dev.off()
